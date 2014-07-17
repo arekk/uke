@@ -1,4 +1,12 @@
 <% if params.key?(:q) %>
+
+  <% unless @g_result.nil? %>
+    <div class="alert alert-info" role="alert">
+      <h4>Informacja</h4>
+      <p>Wyszukiwanie w promieniu 25km względem lokalizacji <%= @g_result.formatted_address %>, współrzędne: lat:<%= @g_result.latitude %>, lon:<%= @g_result.longitude %></p>
+    </div>
+  <% end %>
+
   <% if @results.any? %>
     <% js_option 'MapMarkers', @results_markers %>
 
@@ -51,9 +59,10 @@
   <div class="jumbotron">
       <div class="container">
         <h1>Wyszukiwarka pozwoleń UKE</h1>
-        <p>Baza załadowana z wykazów udostępnionych 2014-07-10 i zawiera <%= @records_count %> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
+        <p>Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
         lokalizację lub właściciela pozwolenia.</p>
-
+        <p>Możesz także wyszukiwać obiekty w promieniu od zadanej lokalizacji, użyj prefixu <code>loc:</code> przed nazwą
+        miasta, eg.: <a href="/?q=loc%3A+bielsko-biała">Bielsko-Biała</a></p>
       </div>
    </div>
 <% end %>

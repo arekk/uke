@@ -38,6 +38,7 @@ GEM
     coffee-script-source (1.7.1)
     erubis (2.7.0)
     execjs (2.2.1)
+    geocoder (1.1.9)
     hike (1.2.3)
     i18n (0.6.11)
     json (1.8.1)
@@ -111,6 +112,7 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
+  geocoder
   mysql2
   nilify_blanks
   rails (= 4.1.4)
