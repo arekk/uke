@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20140716142724) do
     t.decimal  "erp",                         precision: 5,  scale: 1
     t.decimal  "ant_efficiency",              precision: 5,  scale: 1
     t.integer  "ant_height"
-    t.string   "ant_polarisation",  limit: 1
+    t.string   "ant_polarisation",  limit: 2
     t.boolean  "directional"
     t.integer  "operator_id"
     t.integer  "permit_id"

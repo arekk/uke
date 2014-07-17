@@ -13,10 +13,10 @@ gem 'spreadsheet', '~> 0.9.7'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby
 
-gem 'jquery-rails'
-gem 'turbolinks'
-gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0',          group: :doc
+# gem 'jquery-rails'
+# gem 'turbolinks'
+# gem 'jbuilder', '~> 2.0'
+# gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
