@@ -1,0 +1,59 @@
+<% if params.key?(:q) %>
+  <% if @results.any? %>
+    <% js_option 'MapMarkers', @results_markers %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="active"><a href="#table" role="tab" data-toggle="tab">Tabela</a></li>
+      <li><a href="#map" role="tab" data-toggle="tab">Mapa</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="table">
+        <ul class="list-group visible-desktop">
+          <li class="list-group-item list-group-item-default">
+            <div class="row">
+              <div class="col-md-4"><h4 class="list-group-item-heading">Operator</h4></div>
+              <div class="col-md-2"><h4 class="list-group-item-heading">Stacja</h4></div>
+              <div class="col-md-2"><h4 class="list-group-item-heading">Lokalizacja</h4></div>
+              <div class="col-md-1"><h4 class="list-group-item-heading">Typ</h4></div>
+              <div class="col-md-1"><h4 class="list-group-item-heading">TX</h4></div>
+              <div class="col-md-1"><h4 class="list-group-item-heading">RX</h4></div>
+            </div>
+          </li>
+        </ul>
+        <ul class="list-group">
+          <% @results.each do |station| %>
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-4"><%= station.operator_name %></div>
+              <div class="col-md-2"><%= station.name %> </div>
+              <div class="col-md-2"><%= station.location %></div>
+              <div class="col-md-1"><%= station.net %></div>
+              <div class="col-md-1"><%= format_frequency station.tx_frequencies %></div>
+              <div class="col-md-1"><%= format_frequency station.rx_frequencies %></div>
+            </div>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="tab-pane" id="map">
+        <div id="map-canvas"></div>
+      </div>
+    </div>
+
+  <% else %>
+    <div class="alert alert-success" role="alert">
+      <h4>Informacja</h4>
+      <p>Nie znaleziono niczego interesującego, spróbuj zmienić kryteria wyszukiwania.</p>
+    </div>
+  <% end %>
+<% else %>
+  <div class="jumbotron">
+      <div class="container">
+        <h1>Wyszukiwarka pozwoleń UKE</h1>
+        <p>Baza załadowana z wykazów udostępnionych 2014-07-10 i zawiera <%= @records_count %> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
+        lokalizację lub właściciela pozwolenia.</p>
+
+      </div>
+   </div>
+<% end %>

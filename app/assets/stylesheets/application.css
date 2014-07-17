@@ -1,0 +1,19 @@
+/*
+ *= require bootstrap
+ *= require_self
+ *= require_tree .
+ */
+
+body {
+  padding-top: 80px;
+  padding-bottom: 20px;
+}
+
+.tab-content {
+  margin-top: 10px;
+}
+
+#map-canvas {
+  height: 600px;
+  width: 100%;
+}
