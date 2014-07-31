@@ -62,14 +62,18 @@ Application.Page.Frontpage.MapInit = function() {
         icon: pins[value.station_type]
     });
 
-    if (Application.Page.Frontpage.MapInfoWindow) {
-      Application.Page.Frontpage.MapInfoWindow.close();
-    }
-    Application.Page.Frontpage.MapInfoWindow = new google.maps.InfoWindow({
+    var infowindow = new google.maps.InfoWindow({
       content: value.title
     });
     google.maps.event.addListener(marker, 'click', function() {
-      Application.Page.Frontpage.MapInfoWindow.open(map, marker);
+      if (Application.Page.Frontpage.MapInfoWindow) {
+        Application.Page.Frontpage.MapInfoWindow.close();
+      }
+      Application.Page.Frontpage.MapInfoWindow = infowindow;
+      
+      infowindow.open(map, marker);
     });
+
+
   })
 };
