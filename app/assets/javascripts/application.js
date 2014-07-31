@@ -2,7 +2,6 @@
 //= require jquery-filtertable
 //= require jstorage
 //= require bootstrap
-//= require turbolinks
 //= require application
 //= require_tree .
 
@@ -55,7 +54,6 @@ $(document).ready(function () {
   Application.Listener.Publish('page-loaded');
   Application.Listener.Publish(Application.Options.Get('ControllerAction') + '-loaded');
   Application.Listener.Publish('content-loaded', {format: 'html'});
-
   Application.Log('Application: domReady');
 });
 

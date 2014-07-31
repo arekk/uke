@@ -6,6 +6,20 @@ class Station < ActiveRecord::Base
 
   delegate :name, :address, to: :operator, prefix: true
 
+  def transmission_type
+    return :voice   if ['A', 'D', 'Q', 'R', 'T'].include?(net)
+    return :digital if ['B', 'C', 'E', 'F', 'P'].include?(net)
+    :other
+  end
+
+  def voice?
+    :voice == transmission_type
+  end
+
+  def digital?
+    :digital == transmission_type
+  end
+
   def display_name
     "#{operator.name}: #{name}, #{location}"
   end
