@@ -8,41 +8,26 @@
   <% end %>
 
   <% if @results.any? %>
-    <% js_option 'MapMarkers', @results_markers %>
+    <% js_option 'MapMarkers', result_stations_to_g_markers(@results) %>
 
     <ul class="nav nav-tabs" role="tablist">
-      <li class="active"><a href="#table" role="tab" data-toggle="tab">Tabela</a></li>
-      <li><a href="#map" role="tab" data-toggle="tab">Mapa</a></li>
+      <li class="active">
+        <a href="#table-voice" role="tab" data-toggle="tab">Głosowe <div class="label label-success"><%= @results_voice.count %></div></a>
+      </li>
+      <li>
+        <a href="#table-digital" role="tab" data-toggle="tab">Cyfrowe <div class="label label-primary"><%= @results_digital.count %></div></a>
+      </li>
+      <li>
+        <a href="#map" role="tab" data-toggle="tab">Mapa <div class="label label-danger"><%= @results.count %></div></a>
+      </li>
     </ul>
 
     <div class="tab-content">
-      <div class="tab-pane active" id="table">
-        <ul class="list-group visible-desktop">
-          <li class="list-group-item list-group-item-default">
-            <div class="row">
-              <div class="col-md-4"><h4 class="list-group-item-heading">Operator</h4></div>
-              <div class="col-md-2"><h4 class="list-group-item-heading">Stacja</h4></div>
-              <div class="col-md-2"><h4 class="list-group-item-heading">Lokalizacja</h4></div>
-              <div class="col-md-1"><h4 class="list-group-item-heading">Typ</h4></div>
-              <div class="col-md-1"><h4 class="list-group-item-heading">TX</h4></div>
-              <div class="col-md-1"><h4 class="list-group-item-heading">RX</h4></div>
-            </div>
-          </li>
-        </ul>
-        <ul class="list-group">
-          <% @results.each do |station| %>
-          <li class="list-group-item">
-            <div class="row">
-              <div class="col-md-4"><%= station.operator_name %></div>
-              <div class="col-md-2"><%= station.name %> </div>
-              <div class="col-md-2"><%= station.location %></div>
-              <div class="col-md-1"><%= station.net %></div>
-              <div class="col-md-1"><%= format_frequency station.tx_frequencies %></div>
-              <div class="col-md-1"><%= format_frequency station.rx_frequencies %></div>
-            </div>
-          </li>
-          <% end %>
-        </ul>
+      <div class="tab-pane active" id="table-voice">
+        <%= render 'list', stations: @results_voice  %>
+      </div>
+      <div class="tab-pane" id="table-digital">
+        <%= render 'list', stations: @results_digital %>
       </div>
       <div class="tab-pane" id="map">
         <div id="map-canvas"></div>

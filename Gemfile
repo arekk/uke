@@ -2,11 +2,12 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.1.4'
 gem 'rake', '10.1.1'
+
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 
-gem 'mysql2'
+gem 'mysql2', '0.3.15'
 gem 'nilify_blanks'
 gem 'spreadsheet', '~> 0.9.7'
 

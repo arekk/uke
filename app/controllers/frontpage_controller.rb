@@ -13,18 +13,21 @@ class FrontpageController < ApplicationController
       end
       @results.uniq!{|station| station.id}
     elsif params[:q].to_s.strip[0..3] == 'loc:'
-      # podano tak lokalizacyjny, wyszukuję stacje w promieniu
+      # podano tag lokalizacyjny, wyszukuję stacje w promieniu
       unless (@g_result = Geocoder.search(params[:q].gsub('loc:', '').strip).first).nil?
         @results = Station.find_by_sql("
           SELECT *, (3959 * acos (cos ( radians(#{@g_result.latitude.to_f}) ) * cos( radians( lat ) ) * cos( radians( lon ) - radians(#{@g_result.longitude.to_f}) ) + sin ( radians(#{@g_result.latitude.to_f}) ) * sin( radians( lat ) ))) AS distance
           FROM stations
           HAVING distance < 15
-          ORDER BY distance");
+          ORDER BY distance").all
       end
     elsif params[:q].to_s.strip.length > 3
       # wyszukuję po lokalizacji
       @results = Station.where('stations.location LIKE :q OR stations.name LIKE :q OR operators.name LIKE :q', {q: "%#{params[:q]}%"}).joins(:operator).order('operators.name_unified').all
     end
-    @results_markers = @results.map{|station| {title: station.display_name, lat: station.lat, lng: station.lon}}
+
+    @results_voice =   @results.clone.to_a.keep_if{|station| station.voice? }
+    @results_digital = @results.clone.to_a.keep_if{|station| station.digital? }
   end
+
 end
