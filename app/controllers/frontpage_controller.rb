@@ -19,7 +19,7 @@ class FrontpageController < ApplicationController
           SELECT *, (3959 * acos (cos ( radians(#{@g_result.latitude.to_f}) ) * cos( radians( lat ) ) * cos( radians( lon ) - radians(#{@g_result.longitude.to_f}) ) + sin ( radians(#{@g_result.latitude.to_f}) ) * sin( radians( lat ) ))) AS distance
           FROM stations
           HAVING distance < 15
-          ORDER BY distance").all
+          ORDER BY distance")
       end
     elsif params[:q].to_s.strip.length > 3
       # wyszukuję po lokalizacji
