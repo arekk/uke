@@ -1,33 +1,33 @@
 <% if params.key?(:q) %>
 
-  <% unless @g_result.nil? %>
+  <% unless @finder.location.nil? %>
     <div class="alert alert-info" role="alert">
       <h4>Informacja</h4>
-      <p>Wyszukiwanie w promieniu 25km względem lokalizacji <%= @g_result.formatted_address %>, współrzędne: lat:<%= @g_result.latitude %>, lon:<%= @g_result.longitude %></p>
+      <p>Wyszukiwanie w promieniu 25km względem lokalizacji <%= @finder.location.formatted_address %>, współrzędne: lat:<%= @finder.location.latitude %>, lon:<%= @finder.location.longitude %></p>
     </div>
   <% end %>
 
-  <% if @results.any? %>
-    <% js_option 'MapMarkers', result_stations_to_g_markers(@results) %>
+  <% if @finder.any? %>
+    <% js_option 'MapMarkers', result_stations_to_g_markers(@finder.results) %>
 
     <ul class="nav nav-tabs" role="tablist">
       <li class="active">
-        <a href="#table-voice" role="tab" data-toggle="tab">Głosowe <div class="label label-success"><%= @results_voice.count %></div></a>
+        <a href="#table-voice" role="tab" data-toggle="tab">Głosowe <div class="label label-success"><%= @finder.results_voice.count %></div></a>
       </li>
       <li>
-        <a href="#table-digital" role="tab" data-toggle="tab">Cyfrowe <div class="label label-primary"><%= @results_digital.count %></div></a>
+        <a href="#table-digital" role="tab" data-toggle="tab">Cyfrowe <div class="label label-primary"><%= @finder.results_digital.count %></div></a>
       </li>
       <li>
-        <a href="#map" role="tab" data-toggle="tab">Mapa <div class="label label-danger"><%= @results.count %></div></a>
+        <a href="#map" role="tab" data-toggle="tab">Mapa <div class="label label-danger"><%= @finder.results.count %></div></a>
       </li>
     </ul>
 
     <div class="tab-content">
       <div class="tab-pane active" id="table-voice">
-        <%= render 'list', stations: @results_voice  %>
+        <%= render 'list', stations: @finder.results_voice  %>
       </div>
       <div class="tab-pane" id="table-digital">
-        <%= render 'list', stations: @results_digital %>
+        <%= render 'list', stations: @finder.results_digital %>
       </div>
       <div class="tab-pane" id="map">
         <div id="map-canvas"></div>

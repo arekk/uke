@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def format_frequency(list)
-    simple_format list.map{|frequency| number_with_precision(frequency.mhz, :precision => 4)}.join("\n")
+    simple_format list.map{|frequency| number_with_precision(frequency.mhz, :precision => 4)}.map{|mhz| link_to mhz, root_path(q: mhz)}.join("\n")
   end
 
   def result_stations_to_g_markers(stations)
