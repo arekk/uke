@@ -37,20 +37,20 @@ class Uke::Finder
         HAVING distance < 12
       ORDER BY distance
     SQL
-    Station.find_by_sql([sql, @location.latitude.to_f, @location.longitude.to_f, @location.latitude.to_f])
+    UkeStation.find_by_sql([sql, @location.latitude.to_f, @location.longitude.to_f, @location.latitude.to_f])
   end
   
   def by_frq_range
     return nil if @q.strip[0..3] != 'rng:' || (first = @q[4..@q.length].split('-').first.strip.gsub(',', '.').to_f) < 1 || (last =  @q[4..@q.length].split('-').last.strip.gsub(',', '.').to_f) < 1
 
-    sids = Station.find_by_sql ['SELECT fs.station_id AS id FROM frequencies f JOIN frequencies_stations fs ON fs.frequency_id = f.id WHERE f.mhz BETWEEN ? AND ?', first, last]
+    sids = UkeStation.find_by_sql ['SELECT fs.station_id AS id FROM frequencies f JOIN frequencies_stations fs ON fs.frequency_id = f.id WHERE f.mhz BETWEEN ? AND ?', first, last]
     wrap_sids sids
   end
   
   def by_frq
     return nil if @q.length < 4 || @q.gsub(',', '.').to_f < 1
     
-    sids = Station.find_by_sql ['SELECT fs.station_id AS id FROM frequencies f JOIN frequencies_stations fs ON fs.frequency_id = f.id WHERE f.mhz = ?', @q.gsub(',', '.').to_f]
+    sids = UkeStation.find_by_sql ['SELECT fs.station_id AS id FROM frequencies f JOIN frequencies_stations fs ON fs.frequency_id = f.id WHERE f.mhz = ?', @q.gsub(',', '.').to_f]
     wrap_sids sids
   end
   
@@ -65,10 +65,10 @@ class Uke::Finder
          WHERE (s.location LIKE ? OR s.name LIKE ? OR o.name LIKE ?) 
       ORDER BY o.name_unified
     SQL
-    Station.find_by_sql([sql, like, like, like])    
+    UkeStation.find_by_sql([sql, like, like, like])
   end
   
   def wrap_sids(sids)
-    Station.includes(:operator).where(id: sids.map{|r| r.id}).all
+    UkeStation.includes(:operator).where(id: sids.map{|r| r.id}).all
   end
 end

@@ -1,0 +1,19 @@
+defaults: &defaults
+  google_maps_api_key:
+
+  smtp_from:
+  smtp_address:
+  smtp_port: 25
+  smtp_user_name:
+  smtp_password:
+  smtp_authentication: plain
+  smtp_enable_starttls_auto: true
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

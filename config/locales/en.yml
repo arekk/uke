@@ -20,4 +20,22 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  controller:
+    layout:
+      login: Log-in
+      logout: Logout %{name}
+      myaccount: My account
+      log: Logs
+
+    devise:
+      login_button: Log-in
+      pass_reminder: Forgot your password?
+      link_resend: Didn't receive confirmation instructions?
+      sign_up: Sign up
+      sign_up_info: Sign-up is free, having own account you can log found frequencies, browse own and other users frequencies as well.
+      sign_up_mail_info: Pleas use valid email, we'll send there activation link.
+      radioscaner_forum_login: Please ignore
+      password_info: Please give password if you want to change it, otherwise leawe blank
+      password_confirmation_info: Please give current password to dave form
+      cancel_account: Cancel my account
+      cancel_account_info: Unhappy? Cancel your account. Please note, all frequencies and other data will remain available for other, but anonymised.

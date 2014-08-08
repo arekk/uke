@@ -1,0 +1,14 @@
+<h2>Edycja</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= render 'layouts/form_errors', :errors => {:user => resource.errors} if resource.errors.any? %>
+  <%= render 'form_fields', :f => f, :editing => true %>
+<% end %>
+
+<div class="alert-danger alert">
+  <h3><%= t('controller.devise.cancel_account') %></h3>
+  <p><%= t('controller.devise.cancel_account_info') %></p>
+  <p>
+    <%= button_to t('controller.devise.cancel_account'), registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: 'btn btn-danger' %>
+  </p>
+</div>

@@ -27,10 +27,6 @@ def geo2dec(pos)
   deg.to_f + (m.to_f * 1/60) + (s.to_f * 1/60 * 1/60)
 end
 
-def unify_string(string)
-  string.gsub(/[^0-9a-z]/i, '').gsub(/\s+/, '').downcase
-end
-
 def row2hash(row)
   #0 : Nr referencyjny
   #1 : Ważna do
@@ -75,6 +71,7 @@ def row2hash(row)
       ant_height:       row[14].to_i,
       ant_polarisation: row[12],
       directional:      (row[10].strip == '' ? false : true),
+      name_unified:     Uke::Unifier::indexify_string(row[2] + row[8])
     },
 
     frq_tx:     row[18].gsub(/\s+/, '').split(',').map{|frq| frq.to_f}.keep_if{|frq| frq > 0},
@@ -83,38 +80,40 @@ def row2hash(row)
     operator: {
       name:     row[22],
       address:  row[23],
-      name_unified: unify_string(row[22])
+      name_unified: Uke::Unifier::indexify_string(row[22])
     }
   }
 end
 
 def insert_row(row)
-  permit = Permit.find_by_number row[:permit][:number]
-  permit = Permit.create! row[:permit] if permit.nil?
+  permit = UkePermit.find_by_number row[:permit][:number]
+  permit = UkePermit.create! row[:permit] if permit.nil?
 
-  operator = Operator.find_by_name_unified row[:operator][:name_unified]
-  operator = Operator.create! row[:operator] if operator.nil?
+  operator = UkeOperator.find_by_name_unified row[:operator][:name_unified]
+  operator = UkeOperator.create! row[:operator] if operator.nil?
 
-  station = Station.where(name: row[:station][:name], operator_id: operator.id).first
+  station = UkeStation.where(name: row[:station][:name], uke_operator_id: operator.id).first
   if station.nil?
-    station = Station.new row[:station]
-    station.operator = operator
-    station.permit = permit
+    station = UkeStation.new row[:station]
+    station.uke_operator = operator
+    station.uke_permit = permit
     station.save!
   end
 
   row[:frq_rx].each do |mhz|
-    frequency = Frequency.find_or_create_by!(mhz: mhz, usage: 'RX')
-    station.frequencies << frequency if station.frequencies.where(mhz: frequency.mhz, usage: frequency.usage).first.nil?
+    frequency = Frequency.find_or_create_by!(mhz: mhz)
+    station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX') if station.rx_frequencies.where(mhz: frequency.mhz).first.nil?
   end
 
   row[:frq_tx].each do |mhz|
-    frequency = Frequency.find_or_create_by!(mhz: mhz, usage: 'TX')
-    station.frequencies << frequency if station.frequencies.where(mhz: frequency.mhz, usage: frequency.usage).first.nil?
+    frequency = Frequency.find_or_create_by!(mhz: mhz)
+    station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'TX') if station.tx_frequencies.where(mhz: frequency.mhz).first.nil?
   end
 end
 
 Dir["#{Rails.root.to_s}/tmp/ss/*"].each do |xls_file|
+  puts "File #{xls_file}\n"
+
   book = Spreadsheet.open(xls_file, 'rb')
   sheet = book.worksheet(0)
   first = true

@@ -35,3 +35,11 @@ gem 'spreadsheet', '~> 0.9.7'
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
 gem 'geocoder'
+
+group :development do
+  gem 'guard-rails', '~> 0.5.0'
+  gem 'better_errors', '~> 1.1.0'
+end
+
+gem 'devise'
+

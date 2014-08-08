@@ -1,0 +1,8 @@
+<ul class="nav nav-pills nav-stacked">
+  <% @logs.each do |log| %>
+    <li class="<%= (@log && @log.id == log.id) ? 'active' : '' %>"><%= link_to log.name, log %></li>
+  <% end %>
+  <li class="active">
+    <%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-plus-sign') + ' ' + 'Nowy dziennik', new_log_path %>
+  </li>
+</ul>

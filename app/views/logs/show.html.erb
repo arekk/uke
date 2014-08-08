@@ -1,0 +1,15 @@
+<h1>
+  <%= @log.name %>: <%= @log.display_location %>
+</h1>
+
+<div class="clearfix">
+  <div class="col-md-3 well">
+    <%= render 'logs_menu' %>
+  </div>
+  <div class="col-md-9">
+    <%= link_to 'Edytuj dziennik', edit_log_path(@log), class: 'btn btn-default btn-lg' %>
+  </div>
+</div>
+
+
+

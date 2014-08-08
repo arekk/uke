@@ -43,11 +43,17 @@
 <% else %>
   <div class="jumbotron">
       <div class="container">
-        <h1>Wyszukiwarka pozwoleń UKE</h1>
-        <p>Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
-        lokalizację lub właściciela pozwolenia.</p>
-        <p>Możesz także wyszukiwać obiekty w promieniu od zadanej lokalizacji, użyj prefixu <code>loc:</code> przed nazwą
-        miasta, eg.: <a href="/?q=loc%3A+bielsko-biała">Bielsko-Biała</a></p>
+        <form>
+          <div class="form-group col-md-5">
+            <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+          </div>
+          <button type="submit" class="btn btn-success input-lg">Szukaj w bazie</button>
+        </form>
+      </div>
+      <div class="container">
+        <p class="text-muted"><small>Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
+        lokalizację lub właściciela pozwolenia. Możesz także wyszukiwać obiekty w promieniu od zadanej lokalizacji, użyj prefixu <code>loc:</code> przed nazwą
+        miasta, eg.: <a href="/?q=loc%3A+bielsko-biała">Bielsko-Biała</a></small></p>
       </div>
    </div>
 <% end %>
