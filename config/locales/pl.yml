@@ -221,7 +221,7 @@ pl:
     layout:
       login: Zaloguj
       logout: Wyloguj %{name}
-      myaccount: Moje konto
+      myaccount: Konto
       log: Dzienniki
 
     devise:

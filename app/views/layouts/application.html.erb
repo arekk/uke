@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wyszukiwarka pozwoleń UKE</title>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -25,10 +25,12 @@
             <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-user')   + ' ' + t('controller.layout.myaccount'), edit_user_registration_path, class: 'btn btn-default' %></li>
             <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.logout', name: current_user.nickname), destroy_user_session_path, class: 'btn btn-default' %></li>
           <% else %>
-            <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.login'), new_user_session_path, class: 'btn btn-default' %></li>
+            <li ><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.login'), new_user_session_path, class: 'btn btn-default' %></li>
           <% end %>
         </ul>
-        <h3 class="text-muted">Baza nasłuchów</h3>
+        <h2 class="text-muted">
+          <%= image_tag '1407546046_marine_radio.png' %>
+        </h2>
       </div>
       <% if notice %><div class="alert alert-info"><p><%= notice %></p></div><% end %>
       <% if alert  %><div class="alert alert-danger"><p><%= alert %></p></div><% end %>

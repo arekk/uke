@@ -37,6 +37,9 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin]
 gem 'geocoder'
 
 group :development do
+  gem 'bootstrap-generators', '~> 3.1.0'
+  gem 'bootstrap-sass', '~> 3.1.0'
+
   gem 'guard-rails', '~> 0.5.0'
   gem 'better_errors', '~> 1.1.0'
 end

@@ -1,13 +1,24 @@
-<h1>
-  <%= @log.name %>: <%= @log.display_location %>
-</h1>
+
 
 <div class="clearfix">
   <div class="col-md-3 well">
     <%= render 'logs_menu' %>
   </div>
   <div class="col-md-9">
+    <!--
     <%= link_to 'Edytuj dziennik', edit_log_path(@log), class: 'btn btn-default btn-lg' %>
+    -->
+    <div class="well well-lg">
+      <form class="form-inline" method="get" action="<%= new_log_log_entry_path(@log) %>">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" name="mhz" class="form-control input-lg col-sm-3">
+            <div class="input-group-addon">MHz</div>
+          </div>
+          <input type="submit" class="btn btn-default btn-lg" value="Dodaj">
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

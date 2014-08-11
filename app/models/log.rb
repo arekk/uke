@@ -1,4 +1,7 @@
 class Log < ActiveRecord::Base
+  belongs_to :user
+  has_many :log_entries
+
   scope :my, lambda{|user| where(user_id: user.id)}
 
   validates :name, :presence => true, :length => {:maximum => 255}

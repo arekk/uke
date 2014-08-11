@@ -4,14 +4,24 @@ Application.Listener.Subscribe('logs-new-loaded', function() {
 Application.Listener.Subscribe('logs-create-loaded', function() {
   Application.Gmap.MapLoad('Application.Page.Logs.PickerMap');
 });
+Application.Listener.Subscribe('logs-edit-loaded', function() {
+  Application.Gmap.MapLoad('Application.Page.Logs.PickerMap');
+});
+Application.Listener.Subscribe('logs-update-loaded', function() {
+  Application.Gmap.MapLoad('Application.Page.Logs.PickerMap');
+});
 
 Application.Page.Logs = {};
 Application.Page.Logs.PickerMap = function() {
-  var pos = new google.maps.LatLng(52.247686, 19.371425);
-  var mapOptions = {
-    zoom: 6,
-    center: pos
-  };
+  var mapOptions, pos;
+  if ($('#log_lat').val() && $('#log_lon').val()) {
+    pos = new google.maps.LatLng($('#log_lat').val(), $('#log_lon').val());
+    mapOptions = {zoom: 14, center: pos};
+  } else {
+    pos = new google.maps.LatLng(52.247686, 19.371425);
+    mapOptions = {zoom: 6, center: pos};
+  }
+
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   var marker = new google.maps.Marker({
     position: pos,
@@ -19,12 +29,13 @@ Application.Page.Logs.PickerMap = function() {
     draggable:true,
     title: 'Ustaw mnie w miejscu, w którym prowadzisz nasłuch'
   });
-  var geocoder = new google.maps.Geocoder();
 
-  google.maps.event.addListener(marker, 'dragend', function(evt) {
-    geocoder.geocode( { 'latLng': evt.latLng}, function(results, status) {
-      $('#log_lat').val( evt.latLng.lat().toFixed(6));
-      $('#log_lon').val( evt.latLng.lng().toFixed(6));
+
+  var func_geocode = function(lat_lng) {
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode( { 'latLng': lat_lng}, function(results, status) {
+      $('#log_lat').val( lat_lng.lat().toFixed(6));
+      $('#log_lon').val( lat_lng.lng().toFixed(6));
       if (status == google.maps.GeocoderStatus.OK) {
         // Pierwsze potrzebuję kraj, po to, aby usunąć go ze wszystkich pozostałych elementów
         var country = '';
@@ -52,5 +63,9 @@ Application.Page.Logs.PickerMap = function() {
         Application.Log("Geocode was not successful for the following reason: " + status);
       }
     });
-});
+  };
+
+  google.maps.event.addListener(marker, 'dragend', function(evt) {
+    func_geocode(evt.latLng);
+  });
 };

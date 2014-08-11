@@ -1,0 +1,2 @@
+module FrequencyAssignmentsHelper
+end
