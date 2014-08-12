@@ -1,26 +1,45 @@
-
-
 <div class="clearfix">
   <div class="col-md-3 well">
     <%= render 'logs_menu' %>
   </div>
   <div class="col-md-9">
-    <!--
-    <%= link_to 'Edytuj dziennik', edit_log_path(@log), class: 'btn btn-default btn-lg' %>
-    -->
-    <div class="well well-lg">
-      <form class="form-inline" method="get" action="<%= new_log_log_entry_path(@log) %>">
-        <div class="form-group">
-          <div class="input-group">
-            <input type="text" name="mhz" class="form-control input-lg col-sm-3">
-            <div class="input-group-addon">MHz</div>
+    <div class="well well-lg clearfix">
+      <div class="pull-left">
+        <form class="form-inline" method="get" action="<%= new_log_log_entry_path(@log) %>">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" name="mhz" class="form-control input-lg col-sm-3">
+              <div class="input-group-addon">MHz</div>
+            </div>
+            <input type="submit" class="btn btn-default btn-lg" value="Dodaj">
           </div>
-          <input type="submit" class="btn btn-default btn-lg" value="Dodaj">
-        </div>
-      </form>
+        </form>
+      </div>
+      <div class="pull-right visible-lg visible-md"><%= link_to 'Edytuj', edit_log_path(@log), class: 'btn btn-default btn-lg' %></div>
+      <div class="pull-right visible-lg visible-md"><%= button_to 'Usuń', log_path(@log), data: { confirm: "Na pewno usunąć dziennik #{@log.name}?" }, method: :delete, class: 'btn btn-danger btn-lg' %></div>
     </div>
+
+    <% if @log_entries.any? %>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <td>Typ</td>
+            <td>Częstotliwość</td>
+            <td>Właściciel</td>
+            <td>Opis</td>
+            <td></td>
+          </tr>
+        </thead>
+      <% @log_entries.each do |log_entry| %>
+        <tr>
+          <td><%= station_net_to_icon log_entry %></td>
+          <td><%= format_mhz log_entry.frequency_mhz %></td>
+          <td><%= log_entry.related_frequency_display_name || log_entry.bandplan_display_name %></td>
+          <td><%= log_entry.description %></td>
+          <td><%= button_to 'Usuń', log_log_entry_path(@log, log_entry), data: { confirm: "Na pewno usunąć częstotliwość #{format_mhz log_entry.frequency_mhz}?" }, method: :delete, class: 'btn btn-danger' %></td>
+        </tr>
+      <% end %>
+      </table>
+    <% end %>
   </div>
 </div>
-
-
-

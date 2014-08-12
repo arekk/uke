@@ -9,16 +9,17 @@ module ApplicationHelper
     @js_options.store(option, value)
   end
 
-  def format_frequency(list)
-    simple_format list.map{|frequency| number_with_precision(frequency.mhz, :precision => 4)}.map{|mhz| link_to mhz, root_path(q: mhz)}.join("\n")
+  def format_mhz(mhz)
+    number_with_precision(mhz, :precision => 4)
   end
 
   def result_stations_to_g_markers(stations)
     stations.map do |station|
-      {title: "#{station.operator.name}<br />#{station.name}<br />#{station.location}<br /><br />TX:<br />" + format_frequency(station.tx_frequencies) + 'RX: <br />' + format_frequency(station.rx_frequencies),
-      lat: station.lat,
-      lng: station.lon,
-      station_type: station.transmission_type}
+      {title: "#{station[:owner]}<br />#{station[:name]}<br />#{station[:location]}<br /><br />TX:<br />" + (station[:tx_frequencies]).to_s + 'RX: <br />' + (station[:rx_frequencies]).to_s,
+      lat:    station[:lat],
+      lng:    station[:lon],
+      radius: station[:radius],
+      type:   Uke::Net::transmission_type(station[:net])}
     end
   end
 
@@ -32,30 +33,71 @@ module ApplicationHelper
     end
   end
 
-  def station_net_to_icon(station)
-    case station.net
+  def station_net_to_display_name(station_or_net)
+    station_or_net = station_or_net.net if station_or_net.respond_to?(:net)
+    case station_or_net
       when 'A'
-        content_tag :h2, '', class: 'glyphicon glyphicon-user',       title: 'A: dyspozytorska'
+        'dyspozytorska'
       when 'B'
-        content_tag :h2, '', class: 'glyphicon glyphicon-home',       title: 'B: przywoławcza'
+        'przywoławcza'
       when 'C'
-        content_tag :h2, '', class: 'glyphicon glyphicon-transfer',   title: 'C: transmisja danych'
+        'transmisja danych'
       when 'D'
-        content_tag :h2, '', class: 'glyphicon glyphicon-retweet',    title: 'D: retransmisja'
+        'retransmisja'
       when 'E'
-        content_tag :h2, '', class: 'glyphicon glyphicon-random',     title: 'E: zdalne sterowanie'
+        'zdalne sterowanie'
       when 'F'
-        content_tag :h2, '', class: 'glyphicon glyphicon-bullhorn',   title: 'F: alarm'
+        'alarm'
       when 'P'
-        content_tag :h2, '', class: 'glyphicon glyphicon-eye-open',   title: 'P: bezprzewodowe poszukiwanie osób'
+        'bezprzewodowe poszukiwanie osób'
       when 'Q'
-        content_tag :h2, '', class: 'glyphicon glyphicon-headphones', title: 'Q: mikrofon bezprzewodowy'
+        'mikrofon bezprzewodowy'
       when 'R'
-        content_tag :h2, '', class: 'glyphicon glyphicon-briefcase',  title: 'R: reportażowa'
+        'reportażowa'
       when 'T'
-        content_tag :h2, '', class: 'glyphicon glyphicon-earphone',   title: 'T: tranking'
+        'tranking'
       else
         raise 'Unknown net'
+    end
+  end
+
+  def station_net_to_glyphicon(station_or_net)
+    station_or_net = station_or_net.net if station_or_net.respond_to?(:net)
+    case station_or_net
+      when 'A'
+        'glyphicon glyphicon-user'
+      when 'B'
+        'glyphicon glyphicon-home'
+      when 'C'
+        'glyphicon glyphicon-transfer'
+      when 'D'
+        'glyphicon glyphicon-retweet'
+      when 'E'
+        'glyphicon glyphicon-random'
+      when 'F'
+        'glyphicon glyphicon-bullhorn'
+      when 'P'
+        'glyphicon glyphicon-eye-open'
+      when 'Q'
+        'glyphicon glyphicon-headphones'
+      when 'R'
+        'glyphicon glyphicon-briefcase'
+      when 'T'
+        'glyphicon glyphicon-earphone'
+      else
+        raise 'Unknown net'
+    end
+  end
+
+  def station_net_to_icon(station_or_net, tag = :h1)
+    content_tag tag, '', class: station_net_to_glyphicon(station_or_net), title: station_net_to_display_name(station_or_net)
+  end
+
+  def bootstrap_info(&block)
+    content_tag :div, class: 'alert alert-info' do
+      content_tag(:h3) do
+        content_tag(:span, '', class: 'glyphicon glyphicon-info-sign') + ' informacja'
+      end + content_tag(:p, capture( &block ))
     end
   end
 end

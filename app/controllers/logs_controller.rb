@@ -9,6 +9,7 @@ class LogsController < ApplicationController
   # GET /logs/1
   def show
     @logs = Log.my(current_user).all
+    @log_entries = @log.log_entries
   end
 
   # GET /logs/new

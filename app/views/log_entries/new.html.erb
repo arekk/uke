@@ -1,1 +1,7 @@
 <%= render 'form' %>
+<% js_option 'LogLocation', {
+  administrative_area_level_3: @log.administrative_area_level_3,
+  administrative_area_level_2: @log.administrative_area_level_2,
+  administrative_area_level_1: @log.administrative_area_level_1,
+  country: @log.country
+  } %>

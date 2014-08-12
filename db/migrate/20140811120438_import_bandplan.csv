@@ -1,0 +1,129 @@
+"25,0100 - 25,0700",,,,,Służba stała i lądowa
+"25,0700 - 25,2100",,,,,Komunikacja morska
+"25,2100 - 25,5500",,,,,Służba stała i ruchoma
+"25,5500 - 25,6700",,,,,Radioastronomia
+"25,6700 - 26,1000",Cywilne,,,,Radiodyfuzja pasmo 11m - b. mało używane
+"26,1000 - 26,1750",,,,,Komunikacja morska
+"26,1750 - 26,9600",,,,,Służba stała i ruchoma
+"26,9600 - 27,4000",Cywilne,A,,10,"Pasmo obywatelskie 11m, pasmo CB w Polsce"
+"27,4000 - 28,0000",,,,,"Służba stała i ruchoma, pomoce meteorologiczne"
+"28,0000 - 29,7000",Cywilne,,,,Pasmo amatorskie 10m
+"30,0000 - 33,0000",Rządowe,,FM,25,Wojsko (taktyczne)
+"33,0000 - 35,0000",Cywilne,,FM,25,"Firmy budowlane, transportowe, ochrona, itp, [simplex]"
+"35,0250 - 40,0000",Rządowe,,FM,25,Wojsko (taktyczne)
+"40,2800 - 40,4800",Cywilne,,,,Zdalne sterowanie
+"40,6800 - 40,8550",Cywilne,,,,Bezprzewodowe Poszukiwanie Osób (BPO)
+"40,8800 - 41,0050",Cywilne,,,,Monitoring sieci alarmowych
+"41,0150 - 48,0000",Rządowe,,FM,25,Wojsko (taktyczne)
+"48,0000 - 50,0000",Cywilne,,FM,"12,5","Lasy Państwowe, Służba Drogowa, Parki Narodowe;
+Taxi, firmy ochrony mienia, transportowe, [simplex]"
+"50,0000 – 52,0000",Cywilne,,,,Pasmo Amatorskie 6m
+"52,0000 - 68,0000",Rządowe,,FM,25,Wojsko (taktyczne)
+"68,0000 - 69,2000",Cywilne,,FM,"12,5",Sieci dyspozytorskie [duosimplex]
+"69,2000 - 69,9000",Rządowy,,FM,25,Wojsko (taktyczne)
+"69,9000 - 70,0000",Cywilne,,FM,"12,5", Sieci dyspozytorskie [duosimplex]
+"70,0000 - 70,4500",Cywilne,,,,Pasmo Amatorskie 4m
+"70,5000 - 73,3000",Cywilne,,,"12,5",Sieci dyspozytorskie [duosimplex]
+"73,3000 - 74,1000",Rządowe,,FM,25,
+"74,1000 - 74,8000 ",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, transport [duosimplex]"
+"74,8000 - 75,2000",Lotnictwo,,,,Radionawigacja lotnicza
+"75,2000 - 77,5000",Rządowe,,FM,25,Wojsko (taktyczne)
+"77,5000 - 79,0000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, transport, GOPR [duosimplex]"
+"79,0000 - 79,7000 ",Rządowe,,FM,25,Wojsko (taktyczne)
+"79,7000 - 83,9000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, transport, GOPR [duosimplex]"
+"83,9000 - 84,6000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, transport [duosimplex]"
+"84,6000 - 85,0000 ",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, transport [duosimplex] "
+"85,0000 - 87,5000",Rządowe,,FM,25,Wojsko (taktyczne)
+"88,0000 - 108,0000",Cywilne,,WFM,,Radiodyfuzja
+"108,0000 - 118,0000 ",Lotnictwo,,,"25",Radionawigacja lotnicza
+"118,0000 - 137,0000",Lotnictwo,X,AM,"25",Lotnictwo cywilne i wojskowe
+"137,0000 - 144,0000",Rządowe,,AM,"25",Wojsko (lotnictwo)
+"144,0000 - 146,0000",Cywilne,A,,,Pasmo Amatorskie 2m
+"146,0000 - 147,7000",Rządowe,,FM,"12,5",Straże gminne i miejskie
+"147,7000 - 147,9625",Cywilne,X,FM,"12,5",Straże gminne i miejskie
+"147,9750 - 148,6500",Rządowe,X,FM,"12,5",Sieć Zarządzania Urzędów Wojewódzkich
+"148,6625 - 149,3375",Rządowe,X,FM,"12,5",Państwowa Straż Pożarna 
+"149,3500 - 150,0500",Rządowe,,FM,"12,5","MSWiA: Policja, PSP i inne służby "
+"150,0500 - 152,0000",Cywilne,X,FM,"12,5","PKP [simplex, duosimplex]"
+"151,6250 - 151,7750",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"151,7750 - 152,0000",Cywilne,,FM,"12,5","PKP [simplex, duosimplex]"
+"152,0000 - 153,0000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"153,0000 - 154,7750",Cywilne,,FM,"12,5","PKP [simplex, duosimplex]"
+"154,7750 - 156,0000 ",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych, simplex, duosimplex "
+"156,0000 - 157,4250",Cywilne,,FM,"12,5","Żegluga morska i śródlądowa, WOPR [simplex, duosimplex]"
+"157,4500 - 157,9500",Rządowe,,FM,"12,5",Wojsko (logistyka)
+"157,9500 - 158,5750 ",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"158,5750 - 158,9500",Rządowe,,FM,"12,5",Wojsko (logistyka)
+"158,9500 - 159,2000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"159,2000 - 159,4000",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"159,4000 - 159,6250",Rządowe,,,,
+"159,6250 - 159,9000",Cywilne,,FM,"12,5",
+"159,9000 - 160,6000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex], Bezprzewodowe Poszukiwanie Osób (SPO), Pasmo współdzielone z wojskiem,"
+"160,6500 - 160,9750",Cywilne,,FM,"12,5","Żegluga morska i śródlądowa [simplex, duosimplex]"
+"160,9750 - 161,4750",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"161,4750 - 162,0250",Cywilne,,FM,"12,5","Żegluga morska i śródlądowa [simplex, duosimplex]"
+"162,0250 - 162,2500",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"162,8000 - 163,1250",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"163,1375 - 163,2000",Rządowe,,FM,"12,5",Sieć Zarządzania Urzędów Wojewódzkich
+"163,2125 - 164,1000 ",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"164,1000 - 164,3500",Cywilne,,FM,"12,5",Byłe pasmo TPSA
+"164,3500 - 164,5000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"164,5125 - 167,4875",Rządowe,,FM,"12,5","Policja Państwowa, Straż Graniczna, PSP, BOR, ABW, CBS i inne służby"
+"167,5000 - 168,5000",Cywilne,,FM,"12,5",Byłe pasmo TPSA
+"168,5250 - 169,1500",Rządowe/Cywilne,X,FM,"12,5","Służba zdrowia [simplex,dusimplex]"
+"169,1625 - 169,4000",Rządowe,,FM,"12,5",Wojsko (logistyka / służby medyczne)
+"169,4000 - 169,4250",Cywilne,,FM,"12,5","systemy zdalnego odczytu liczników (do mocy 500mW), systemy śledzenia mienia, itp."
+"169,4250 - 169,8125",Cywilne,,FM,"12,5","Sieć Pager, standard ERMES - po nowelizacji w 2007 moze tu byc wszystko, choc glownie cyfra i monitoring, jakies radiodostepy"
+"169,8125 - 170,5875",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych [simplex, duosimplex]"
+"170,6000 - 170,8875",Rządowe,,FM,"12,5",Służba Celna i Słuzba Więzienna
+"170,9000 - 172,0000",Cywilne,,FM,"12,5","Sieci taxi, ochrony mienia, budownictwo, transport, monitoring sieci alarmowych"
+"172,0125 - 173,9875",Rządowe,X,FM,"12,5","Policja, Straż Graniczna, inne służby"
+"174,0000 - 225,0000",Cywilne,,,,Radiodyfuzja
+"225,0000 - 328,6000",Rządowe,,AM,25,Wojsko - lotnictwo
+"328,6000 - 335,4000",,,,,"Radionawigacja lotnicza, ILS"
+"335,4000 - 380,0000",Rządowe,,AM,25,Wojsko - lotnictwo
+"380,0000 - 383,0000",Rządowe ,,,,TETRA - Policja i inne słuzby
+"390,0000 - 393,0000",Rządowe ,,,,TETRA - Policja i inne słuzby
+"406,0000 - 406,1000",Rządowe/Cywilne,,,,Radiopławy do lokalizacji awarii EPIRBs (komunikacja morska)
+"410,0000 - 412,0000",Rządowe,,FM,"12,5","Wojsko (sieci dyspozytorskie) [simplex, duosimplex]"
+"412,0000 - 412,5000",Cywilne,,,,Systemy szerokopasmowe
+"412,5000 - 415,0000",Cywilne,,,,Nordisk Polska - CDMA420
+"415,0000 - 415,0625",Pasmo ochronne,,,,
+"415,0625 - 416,2000",Cywilne,,,25,TETRA cywilna
+"416,2000 - 417,8750",Cywilne,,FM,"12,5","Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, +10 MHz"
+"417,5000 - 418,5000",Cywilne,X,FM,"12,5","Trunking Energetyki - MPT1327, uplink - downlink +10 MHz"
+"418,5000 - 419,0000",Cywilne,,,,"Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, +10 MHz"
+"419,0000 - 419,2125",Cywilne,,,,PGNiG + Exatel
+"419,2125 - 420,0000",Cywilne,,FM,"12,5","Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, +10 MHz"
+"420,0000 - 422,0000",Rządowe,,FM,"12,5","Wojsko (sieci dyspozytorskie) [simplex, duosimplex]"
+"422,0000 - 422,5000",Cywilne,,,,Systemy szerokopasmowe
+"422,5000 - 425,0000",Cywilne,,,,Nordisk Polska - CDMA420
+"425,0000 - 425,0625",Pasmo ochronne,,,,
+"425,0625 - 426,2000",Cywilne,,,,TETRA cywilna
+"426,2000 - 427,5000",Cywilne,,FM,"12,5","Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, -10 MHz"
+"427,5000 - 428,5000",Cywilne,X,FM,"12,5","Trunking Energetyki - MPT1327, downlink - uplink -10 MHz"
+"428,5000 - 429,0000",Cywilne,,FM,"12,5","Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, -10 MHz"
+"429,0000 - 429,2125",Cywilne,,,,PGNiG + Exatel
+"429,2125 - 429,9875",Cywilne,,FM,"12,5","Sieci dyspozytorskie - [simplex, duosimplex, duplex] - odst, -10 MHz"
+" 430,0000 - 439,9875",Cywilne,A,,,Pasmo Amatorskie 70cm
+"440,0000 - 446,0000",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"458,3250 - 459,0000",Cywilne,,FM,"12,5","""Sieć trunkingowa TP S,A, """"Radio-Net"" (operator sieci ""UNI-Net""), Duosimplex +10MHz""
+"
+"446,00625 - 446,09375",Cywilne,A,FM,"12,5",Radiotelefony PMR446
+"446,1000 - 448,0000",Rządowe,,,,Zapisane w krajowej tablicy przeznaczeń częstotliwości
+"448,0000 - 450,0000",Cywilne,,FM,"12,5","Sieci dyspozytorskie, firmy ochrony mienia, transmisja danych itp, [simplex]"
+"450,0000 - 452,0000",Rządowe,,FM,25,"Pasmo MSWiA - Policja, Straż Pożarna, itp, Odstęp 10 MHz"
+"452,0000 - 452,5000",Rządowe,,,,"Wojsko, odstęp 10 MHz"
+"452,5000 - 457,0000",Cywilne,,FM,25,"Orange - NMT450, CDMA, Uplink (downlink +10 MHz)"
+"457,0000 - 458,3125",Cywilne,,FM,"12,5",
+"459,0000 - 459,7000",Cywilne,,FM,"12,5","Sieci dyspozytorskie, firmy ochrony mienia, komunalne, radiolinie stacji radiowych, itp, [simplex, duosimplex,duplex] + 10 MHz"
+"459,7000 - 460,0000",Cywilne,,FM,"12,5","Dupleksowe sieci transmisji danych  - krajowe i regionalne, Uplink (downlink - 10MHZ)"
+"460,0000 - 462,0000",Rządowe,,FM,25,"Pasmo MSWiA - Policja, Straż Pożarna, itp, Odstęp 10 MHz"
+"462,0000 - 462,5000",Rządowe,,,,"Wojsko, odstęp 10 MHz"
+"462,5000 - 467,0000",Cywilne,,FM,25,"Orange - NMT450, CDMA, Downlink (uplink -10 MHz)"
+"467,0000 - 468,3250",Cywilne,,FM,"12,5","Firmy Taxi, ochrony mienia, komunalne, kurierskie, budowlane, transportowe, trankingi komercyjne"
+"468,3250 - 468,9875",Cywilne,,FM,"12,5","Sieć trunkingowa TP S,A, ""Radio-Net"" (operator sieci ""UNI-Net""), Duosimplex -10MHz"
+"468,9875 - 469,1000",Rządowe,,,,"Zakres wykluczony z wydawanych, publicznych pozwoleń UKE"
+"469,1000 - 469,7000",Cywilne,,FM,"12,5","Sieci dyspozytorskie, firmy ochrony mienia, komunalne, radiolinie stacji radiowych, itp, [simplex, duosimplex,duplex] - 10 MHz"
+"469,7000 - 470,0000",Cywilne,,,,"Dupleksowe sieci transmisji danych  - krajowe i regionalne, Downlink (uplink - 10MHZ)"
+"470,0000 - 646,0000",Cywilne,,,,Radiodyfuzja / Ruchoma

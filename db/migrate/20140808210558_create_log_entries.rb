@@ -3,16 +3,19 @@ class CreateLogEntries < ActiveRecord::Migration
     create_table :log_entries do |t|
       t.references :user
       t.references :log
-      t.references :frequency_assignment
 
       t.text :description
       t.integer :level
+      t.string :net, :limit => 1
+      t.integer :related_frequency_assignment_id
 
       t.timestamps
     end
 
     add_index :log_entries, :log_id
-    add_index :log_entries, :frequency_assignment_id
     add_index :log_entries, :user_id
+
+    add_index :log_entries, :related_frequency_assignment_id
+
   end
 end

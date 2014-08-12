@@ -237,20 +237,36 @@ pl:
       cancel_account: Usuń konto
       cancel_account_info: Nie jesteś zadowolony, możesz usunąć konto, zwróć uwagę, że wszelkie dane dotyczące nasłuchów nie zostaną usunięte, lecz wyłącznie zanonimizowane.
 
+  attributes:
+    country: Kraj
+    administrative_area_level_1: Województwo
+    administrative_area_level_2: Powiat
+    administrative_area_level_3: Miasto
+    street_address: Dokładny adres (jeśli istnieje)
+    lat: Szerokość
+    lon: Długość
+
   activerecord:
+    errors:
+      models:
+        log_entry:
+          attributes:
+            mhz:
+              step_invalid: nie pasuje do odstępu międzykanałowego dla tego pasma, sprawdź czy skanujesz używając odpowiedniego kroku i czy Twój skaner pokazuje prawidłową częstotliwość.
+              out_of_range: poza zakresem, prawidłowe częstotliwości zawierają się w granicach od 25 do 520 MHz
     models:
       user: użytkownika
       log: dziennik
+      log_entry: wpis
 
     attributes:
+      log_entry:
+        mhz: Częstotliwość
+        description: Opis, uwagi
+        net: Rodzaj transmisji
+        level: Poziom sygnału
+
       log:
-        country: Kraj
-        administrative_area_level_1: Województwo
-        administrative_area_level_2: Powiat
-        administrative_area_level_3: Miasto
-        street_address: Dokładny adres (jeśli istnieje)
-        lat: Szerokość
-        lon: Długość
         name: Tytuł
         remarks: Uwagi własne
 
