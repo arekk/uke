@@ -1,6 +1,7 @@
 class UkeStation < ActiveRecord::Base
   belongs_to :uke_operator
   belongs_to :uke_permit
+  belongs_to :uke_import
 
   has_many :frequency_assignments, as: :subject
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140811134126) do
+ActiveRecord::Schema.define(version: 20140813153406) do
 
   create_table "bandplans", force: true do |t|
     t.decimal  "mhz_start",   precision: 10, scale: 4, null: false
@@ -38,14 +38,16 @@ ActiveRecord::Schema.define(version: 20140811134126) do
     t.integer  "subject_id"
     t.string   "subject_type"
     t.integer  "frequency_id"
-    t.string   "usage",        limit: 2
+    t.string   "usage",         limit: 2
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "uke_import_id"
   end
 
-  add_index "frequency_assignments", ["frequency_id"], name: "index_frequency_assignments_on_frequency_id", using: :btree
+  add_index "frequency_assignments", ["frequency_id"], name: "index_assigned_frequencies_on_frequency_id", using: :btree
   add_index "frequency_assignments", ["subject_type", "subject_id", "usage"], name: "assigned_frequencies_on_subject_usage", using: :btree
-  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_frequency_assignments_on_subject_type_and_subject_id", using: :btree
+  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_assigned_frequencies_on_subject_type_and_subject_id", using: :btree
+  add_index "frequency_assignments", ["uke_import_id"], name: "index_frequency_assignments_on_uke_import_id", using: :btree
 
   create_table "log_entries", force: true do |t|
     t.integer  "user_id"
@@ -87,6 +89,26 @@ ActiveRecord::Schema.define(version: 20140811134126) do
 
   add_index "logs", ["user_id"], name: "index_logs_on_user_id", using: :btree
 
+  create_table "uke_import_news", force: true do |t|
+    t.integer  "uke_import_id"
+    t.integer  "uke_station_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "uke_import_news", ["uke_import_id", "uke_station_id"], name: "index_uke_import_news_on_uke_import_id_and_uke_station_id", using: :btree
+  add_index "uke_import_news", ["uke_import_id"], name: "index_uke_import_news_on_uke_import_id", using: :btree
+  add_index "uke_import_news", ["uke_station_id"], name: "index_uke_import_news_on_uke_station_id", using: :btree
+
+  create_table "uke_imports", force: true do |t|
+    t.date     "released_on"
+    t.boolean  "active",      default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "uke_imports", ["active"], name: "index_uke_imports_on_active", using: :btree
+
   create_table "uke_operators", force: true do |t|
     t.string   "name"
     t.string   "address"
@@ -124,11 +146,13 @@ ActiveRecord::Schema.define(version: 20140811134126) do
     t.integer  "uke_permit_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name_unified",                                         null: false
+    t.string   "name_unified",                                                     null: false
+    t.integer  "uke_import_id",                                        default: 1
   end
 
   add_index "uke_stations", ["lon", "lat"], name: "index_uke_stations_on_lon_and_lat", using: :btree
   add_index "uke_stations", ["name_unified"], name: "index_uke_stations_on_name_unified", using: :btree
+  add_index "uke_stations", ["uke_import_id"], name: "index_uke_stations_on_uke_import_id", using: :btree
   add_index "uke_stations", ["uke_operator_id"], name: "index_uke_stations_on_uke_operator_id", using: :btree
   add_index "uke_stations", ["uke_permit_id"], name: "index_uke_stations_on_uke_permit_id", using: :btree
 
@@ -150,13 +174,13 @@ ActiveRecord::Schema.define(version: 20140811134126) do
     t.integer  "failed_attempts",         default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.string   "nickname"
     t.string   "location"
     t.string   "scanner_model"
     t.string   "trx_model"
     t.string   "radioscaner_forum_login"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "nickname"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

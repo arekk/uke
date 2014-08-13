@@ -1,4 +1,7 @@
-#!/usr/bin/env ruby.exe
+def putsnb(s)
+  puts Time.now.strftime("%H:%M:%S") + ': ' + s
+  $stdout.flush
+end
 
 def geo2dec(pos)
   # pozycję mamy w formacie: 18E47'13"
@@ -85,35 +88,72 @@ def row2hash(row)
   }
 end
 
-def insert_row(row)
+def insert_row(row, uke_import)
   permit = UkePermit.find_by_number row[:permit][:number]
   permit = UkePermit.create! row[:permit] if permit.nil?
 
   operator = UkeOperator.find_by_name_unified row[:operator][:name_unified]
   operator = UkeOperator.create! row[:operator] if operator.nil?
 
-  station = UkeStation.where(name_unified: row[:station][:name_unified], uke_operator_id: operator.id).first
+  any_news = false
+  station = UkeStation.where(name_unified: row[:station][:name_unified], uke_operator: operator).first
+
   if station.nil?
+    any_news = true
     station = UkeStation.new row[:station]
     station.uke_operator = operator
   end
-  
+
+  station.uke_import = uke_import
   station.uke_permit = permit
   station.save!
-  
+
   row[:frq_rx].each do |mhz|
     frequency = Frequency.find_or_create_by!(mhz: mhz)
-    station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX') if station.rx_frequencies.where(mhz: frequency.mhz).first.nil?
+    if (frequency_assignment = station.frequency_assignments.where(usage: 'RX', frequency: frequency).first).nil?
+      station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX', uke_import: uke_import)
+      any_news = true
+    else
+      frequency_assignment.uke_import = uke_import
+    end
   end
 
   row[:frq_tx].each do |mhz|
     frequency = Frequency.find_or_create_by!(mhz: mhz)
-    station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'TX') if station.tx_frequencies.where(mhz: frequency.mhz).first.nil?
+    if (frequency_assignment = station.frequency_assignments.where(usage: 'TX', frequency: frequency).first).nil?
+      station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'TX', uke_import: uke_import)
+      any_news = true
+    else
+      frequency_assignment.uke_import = uke_import
+    end
+  end
+
+  if any_news && UkeImportNews.where(uke_import: uke_import, uke_station: station).first.nil?
+    UkeImportNews.create(uke_import: uke_import, uke_station: station)
+    putsnb "News on station #{station.display_name}"
   end
 end
 
-Dir["#{Rails.root.to_s}/tmp/ss/*"].each do |xls_file|
-  puts "File #{xls_file}\n"
+ARGV.each do|a|
+  putsnb "Argument: #{a}"
+  @import_release_date = a.sub(/--release-date=/, '').to_s unless (a =~ /--release-date=/).nil?
+end
+
+if @import_release_date.nil?
+  putsnb "Give UKE database release date as --release-date= argument"
+  exit
+end
+
+@uke_import = UkeImport.find_by_released_on(Date.parse(@import_release_date))
+if @uke_import.nil?
+  putsnb "Release not found, please create one using ss_import_create.rb"
+  exit
+end
+
+putsnb "UKE import release #{@uke_import.id}/#{@uke_import.released_on.to_s}"
+
+Dir["#{Rails.root.to_s}/tmp/ss/#{@import_release_date}/*"].each do |xls_file|
+  putsnb "File #{xls_file}\n"
 
   book = Spreadsheet.open(xls_file, 'rb')
   sheet = book.worksheet(0)
@@ -123,7 +163,7 @@ Dir["#{Rails.root.to_s}/tmp/ss/*"].each do |xls_file|
       first = false
     else
       begin
-        insert_row(row2hash row)
+        insert_row(row2hash(row), @uke_import)
       rescue => e
         puts e.to_s
         puts row2hash(row).inspect
@@ -131,3 +171,14 @@ Dir["#{Rails.root.to_s}/tmp/ss/*"].each do |xls_file|
     end
   end
 end
+
+UkeImport.all.each do |uke_import|
+  uke_import.active = false
+  uke_import.save!
+end
+
+uia = UkeImport.find(@uke_import.id)
+uia.active = true
+uia.save!
+
+putsnb "Done"

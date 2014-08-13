@@ -1,8 +1,11 @@
 class Uke::Finder
-  attr_accessor :q, :results, :results_voice, :results_digital, :location
+  attr_accessor :q, :results, :results_voice, :results_digital, :location, :active_import
 
   def initialize
     @results = @results_voice = @results_digital = []
+
+    @active_import = UkeImport.find_by_active(true)
+    raise 'There is no active import' if active_import.nil?
   end
 
   def any?
@@ -32,10 +35,11 @@ class Uke::Finder
          SELECT DISTINCT us.id,
                 (3959 * acos(cos(radians(:lat))*cos(radians(lat))*cos(radians(lon)-radians(:lon))+sin(radians(:lat))*sin(radians(lat)))) AS distance
            FROM uke_stations AS us
+          WHERE us.uke_import_id = :uke_import_id
          HAVING distance < 10
        ORDER BY distance ASC
     SQL
-    sids = (conn.select_all sql.gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s))).rows.map{|row|row[0]}.join(',')
+    sids = (conn.select_all sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s))).rows.map{|row|row[0]}.join(',')
 
     result_to_hash select_using_uke_stations_sql(sids, "FIND_IN_SET(us.id, '#{sids}')")
   end
@@ -44,13 +48,13 @@ class Uke::Finder
     return nil if @q.strip[0..3] != 'rng:' || (first = Uke::Unifier::frq_string(@q[4..@q.length].split('-').first)) < 1 || (last =  Uke::Unifier::frq_string(@q[4..@q.length].split('-').last)) < 1
 
     sql = <<-SQL
-         SELECT DISTINCT subject_id
+         SELECT DISTINCT fa.subject_id
            FROM frequencies f
-      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation')
-          WHERE f.mhz BETWEEN :mhz_start AND :mhz_end
+      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
+          WHERE (f.mhz BETWEEN :mhz_start AND :mhz_end)
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':mhz_start', conn.quote_string(first.to_s)).gsub(':mhz_end', conn.quote_string(last.to_s)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz_start', conn.quote_string(first.to_s)).gsub(':mhz_end', conn.quote_string(last.to_s)))
   end
 
   def by_frq
@@ -59,11 +63,11 @@ class Uke::Finder
     sql = <<-SQL
          SELECT DISTINCT subject_id
            FROM frequencies f
-      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation')
+      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
           WHERE f.mhz = :mhz
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s)))
   end
 
   def by_string
@@ -73,10 +77,11 @@ class Uke::Finder
         SELECT us.id
           FROM uke_stations us
           JOIN uke_operators uo on (uo.id = us.uke_operator_id)
-         WHERE (us.location LIKE '%:like%' OR us.name LIKE '%:like%' OR uo.name LIKE '%:like%')
+         WHERE us.uke_import_id = :uke_import_id
+           AND (us.location LIKE '%:like%' OR us.name LIKE '%:like%' OR uo.name LIKE '%:like%')
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':like', conn.quote_string(@q)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':like', conn.quote_string(@q)))
   end
 
   def by_frq_order_by_distance
@@ -92,7 +97,7 @@ class Uke::Finder
                  (3959 * acos(cos(radians(:lat))*cos(radians(lat))*cos(radians(lon)-radians(:lon))+sin(radians(:lat))*sin(radians(lat)))) AS distance,
                  fa.id AS frequency_assignment_id
             FROM frequencies f
-      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation')
+      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
       INNER JOIN uke_stations us ON us.id = fa.subject_id
       INNER JOIN uke_operators uo ON uo.id = us.uke_operator_id
            WHERE f.mhz = :mhz
@@ -100,7 +105,7 @@ class Uke::Finder
         ORDER BY distance ASC
     SQL
 
-    result_to_hash(conn.select_all(sql.gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s)).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s))))
+    result_to_hash(conn.select_all(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s)).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s))))
   end
 
   private

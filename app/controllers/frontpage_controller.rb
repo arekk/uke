@@ -1,6 +1,7 @@
 class FrontpageController < ApplicationController
   def index
-    @records_count = UkeStation.count
     @finder = (Uke::Finder.new).query(params[:q])
+    @records_count = @finder.active_import.uke_stations.count
+    @released_on = @finder.active_import.released_on
   end
 end

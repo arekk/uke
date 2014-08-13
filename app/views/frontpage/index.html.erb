@@ -47,13 +47,12 @@
       <p>Nie znaleziono niczego interesującego, spróbuj zmienić kryteria wyszukiwania.</p>
     </div>
   <% end %>
-  <div class="jumbotron">
-    
-    <!-- to jest dla desktopów: przycisko obok okienka wyszukiwania -->
+  <div class="well well-lg">
+    <!-- to jest dla desktopów: przycisk obok okienka wyszukiwania -->
     <div class="container hidden-xs">
       <form>
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-5 col-md-offset-2">
             <div class="form-group">
               <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
             </div>
@@ -74,18 +73,17 @@
         <button type="submit" class="btn btn-primary input-lg col-xs-12"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
       </form>
     </div>
-    
-    <div class="container hidden-xs">
+  </div>
+
+  <div class="container hidden-xs">
+    <div class=" col-md-11">
       <p class="text-muted"><small>
-        Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
-        lokalizację lub właściciela pozwolenia.
-      </small></p>
-      <p class="text-muted"><small>
-        Możesz także:
-        wyszukiwać obiekty w promieniu od zadanej lokalizacji: użyj prefixu <code>loc:</code> przed nazwą miasta, eg.: <code><a href="/?q=loc: Bielsko-Biała">loc: Bielsko-Biała</a></code>
+        Baza załadowana z wykazów udostępnionych <code><%= format_date @released_on, :only_date %></code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
+        lokalizację lub właściciela pozwolenia. Możesz także:
+        wyszukiwać obiekty w promieniu od zadanej lokalizacji: użyj prefixu <code>loc:</code> przed nazwą miasta, eg.: <code><a href="/?q=loc: Bielsko-Biała">loc: Bielsko-Biała</a></code>;
         wyszukiwać w zadanym przedziale częstotliwości: użyj prefixu <code>rng:</code> i podaj zakres częstotliwości, eg.: <code><a href="/?q=rng: 160.000 - 160.020">rng: 160.000 - 160.020</a></code>
       </small></p>
-
     </div>
- </div>
+  </div>
+
 <% end %>
