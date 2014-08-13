@@ -14,7 +14,7 @@
     <% end %>
 
     <% if @stations.any? %>
-      <ul class="list-group visible-desktop">
+      <ul class="list-group hidden-xs">
         <li class="list-group-item list-group-item-default">
           <div class="row">
             <div class="col-md-1"><h4 class="list-group-item-heading">Typ</h4></div>
@@ -84,7 +84,7 @@
     <div class="form-group">
       <%= f.label :level, class: 'control-label' %>
       <p class="text-muted"><small>1 - nieczytelny, 5 - doskonały</small></p>
-      <%= f.select :level, ([1, 2, 3, 4, 5].map {|n| [n, n] }), {include_blank: true}, {class: 'form-control input-lg'} %>
+      <%= f.select :level, ([5, 4, 3, 2, 1].map {|n| [n, n] }), {}, {class: 'form-control input-lg'} %>
     </div>
 
     <div class="form-group">

@@ -17,7 +17,7 @@ class LogEntry < ActiveRecord::Base
   scope :my, lambda{|user| where(user_id: user.id)}
 
   validate :mhz do
-    mhz = @mhz.to_s.gsub(',', '.').to_f
+    mhz = Uke::Unifier::frq_string(@mhz)
 
     errors.add(:mhz, :out_of_range) if mhz < 25 || mhz > 520
     bandplan = Bandplan.find_by_mhz mhz

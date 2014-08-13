@@ -9,13 +9,17 @@ module ApplicationHelper
     @js_options.store(option, value)
   end
 
+  def format_frequencies(string)
+    simple_format string.to_s.split(',').map{|mhz| format_mhz(mhz.strip)}.join("\n")
+  end
+
   def format_mhz(mhz)
     number_with_precision(mhz, :precision => 4)
   end
 
   def result_stations_to_g_markers(stations)
     stations.map do |station|
-      {title: "#{station[:owner]}<br />#{station[:name]}<br />#{station[:location]}<br /><br />TX:<br />" + (station[:tx_frequencies]).to_s + 'RX: <br />' + (station[:rx_frequencies]).to_s,
+      {title: "#{station[:owner]}<br />#{station[:name]}<br />#{station[:location]}<br /><br />TX:<br />" + format_frequencies(station[:tx_frequencies]) + 'RX: <br />' + format_frequencies(station[:rx_frequencies]),
       lat:    station[:lat],
       lng:    station[:lon],
       radius: station[:radius],

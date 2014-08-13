@@ -92,14 +92,15 @@ def insert_row(row)
   operator = UkeOperator.find_by_name_unified row[:operator][:name_unified]
   operator = UkeOperator.create! row[:operator] if operator.nil?
 
-  station = UkeStation.where(name: row[:station][:name], uke_operator_id: operator.id).first
+  station = UkeStation.where(name_unified: row[:station][:name_unified], uke_operator_id: operator.id).first
   if station.nil?
     station = UkeStation.new row[:station]
     station.uke_operator = operator
-    station.uke_permit = permit
-    station.save!
   end
-
+  
+  station.uke_permit = permit
+  station.save!
+  
   row[:frq_rx].each do |mhz|
     frequency = Frequency.find_or_create_by!(mhz: mhz)
     station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX') if station.rx_frequencies.where(mhz: frequency.mhz).first.nil?

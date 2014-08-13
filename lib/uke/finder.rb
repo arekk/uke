@@ -41,7 +41,7 @@ class Uke::Finder
   end
 
   def by_frq_range
-    return nil if @q.strip[0..3] != 'rng:' || (first = @q[4..@q.length].split('-').first.strip.gsub(',', '.').to_f) < 1 || (last =  @q[4..@q.length].split('-').last.strip.gsub(',', '.').to_f) < 1
+    return nil if @q.strip[0..3] != 'rng:' || (first = Uke::Unifier::frq_string(@q[4..@q.length].split('-').first)) < 1 || (last =  Uke::Unifier::frq_string(@q[4..@q.length].split('-').last)) < 1
 
     sql = <<-SQL
          SELECT DISTINCT subject_id
@@ -54,7 +54,7 @@ class Uke::Finder
   end
 
   def by_frq
-    return nil if @q.length < 4 || @q.gsub(',', '.').to_f < 1
+    return nil if @q.length < 4 || Uke::Unifier::frq_string(@q) < 1
 
     sql = <<-SQL
          SELECT DISTINCT subject_id
@@ -63,7 +63,7 @@ class Uke::Finder
           WHERE f.mhz = :mhz
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':mhz', conn.quote_string(@q.gsub(',', '.').to_s)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s)))
   end
 
   def by_string
@@ -96,10 +96,11 @@ class Uke::Finder
       INNER JOIN uke_stations us ON us.id = fa.subject_id
       INNER JOIN uke_operators uo ON uo.id = us.uke_operator_id
            WHERE f.mhz = :mhz
+          HAVING distance <= (2*us.radius)
         ORDER BY distance ASC
     SQL
 
-    result_to_hash(conn.select_all(sql.gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s)).gsub(':mhz', conn.quote_string(@q.gsub(',', '.').to_s))))
+    result_to_hash(conn.select_all(sql.gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s)).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s))))
   end
 
   private

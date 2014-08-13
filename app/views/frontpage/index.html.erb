@@ -8,13 +8,25 @@
   <% end %>
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
-      <a href="#table-voice" role="tab" data-toggle="tab">Głosowe <div class="label label-success"><%= @finder.results_voice.count %></div></a>
+      <a href="#table-voice" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Głosowe </span>
+        <h2 class="visible-xs glyphicon glyphicon-user"></h2>
+        <div class="label label-success"><%= @finder.results_voice.count %></div>
+      </a>
     </li>
     <li>
-      <a href="#table-digital" role="tab" data-toggle="tab">Cyfrowe <div class="label label-primary"><%= @finder.results_digital.count %></div></a>
+      <a href="#table-digital" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Cyfrowe </span>
+        <h2 class="visible-xs glyphicon glyphicon-transfer"></h2>
+        <div class="label label-primary"><%= @finder.results_digital.count %></div>
+      </a>
     </li>
     <li>
-      <a href="#map" role="tab" data-toggle="tab">Mapa <div class="label label-danger"><%= @finder.results.count %></div></a>
+      <a href="#map" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Mapa </span>
+        <h2 class="visible-xs glyphicon glyphicon-map-marker"></h2>
+        <div class="label label-danger"><%= @finder.results.count %></div>
+      </a>
     </li>
   </ul>
   <div class="tab-content">
@@ -36,16 +48,34 @@
     </div>
   <% end %>
   <div class="jumbotron">
-    <div class="container">
+    
+    <!-- to jest dla desktopów: przycisko obok okienka wyszukiwania -->
+    <div class="container hidden-xs">
       <form>
-        <div class="form-group col-md-5">
-          <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+            </div>
+          </div>
+          <div class="col-md-2">      
+            <button type="submit" class="btn btn-primary input-lg"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+          </div>      
         </div>
-        <button type="submit" class="btn btn-primary input-lg">
-          <span class="glyphicon glyphicon-search"></span> Szukaj</button>
       </form>
     </div>
-    <div class="container">
+
+    <!-- to dla smartfonów: przycisk pod okienkiem wyszukiwania -->    
+    <div class="container visible-xs">
+      <form>
+        <div class="form-group">
+        <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+        </div>
+        <button type="submit" class="btn btn-primary input-lg col-xs-12"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+      </form>
+    </div>
+    
+    <div class="container hidden-xs">
       <p class="text-muted"><small>
         Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
         lokalizację lub właściciela pozwolenia.

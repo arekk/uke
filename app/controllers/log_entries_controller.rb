@@ -5,7 +5,7 @@ class LogEntriesController < ApplicationController
 
   # GET /log_entries/new
   def new
-    @log_entry = LogEntry.my(current_user).new(mhz: params[:mhz])
+    @log_entry = LogEntry.my(current_user).new(mhz: Uke::Unifier::frq_string(params[:mhz]))
   end
 
   # GET /log_entries/1/edit
