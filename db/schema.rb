@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813153406) do
+ActiveRecord::Schema.define(version: 20140813153407) do
 
   create_table "bandplans", force: true do |t|
     t.decimal  "mhz_start",   precision: 10, scale: 4, null: false
@@ -44,9 +44,9 @@ ActiveRecord::Schema.define(version: 20140813153406) do
     t.integer  "uke_import_id"
   end
 
-  add_index "frequency_assignments", ["frequency_id"], name: "index_assigned_frequencies_on_frequency_id", using: :btree
+  add_index "frequency_assignments", ["frequency_id"], name: "index_frequency_assignments_on_frequency_id", using: :btree
   add_index "frequency_assignments", ["subject_type", "subject_id", "usage"], name: "assigned_frequencies_on_subject_usage", using: :btree
-  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_assigned_frequencies_on_subject_type_and_subject_id", using: :btree
+  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_frequency_assignments_on_subject_type_and_subject_id", using: :btree
   add_index "frequency_assignments", ["uke_import_id"], name: "index_frequency_assignments_on_uke_import_id", using: :btree
 
   create_table "log_entries", force: true do |t|
@@ -174,13 +174,13 @@ ActiveRecord::Schema.define(version: 20140813153406) do
     t.integer  "failed_attempts",         default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
+    t.string   "nickname"
     t.string   "location"
     t.string   "scanner_model"
     t.string   "trx_model"
     t.string   "radioscaner_forum_login"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "nickname"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

@@ -3,6 +3,7 @@
 <% js_option('Debug', Rails.env != 'production') %>
 <% js_option('GaGoal', flash[:ga_goal]) if flash[:ga_goal] %>
 <% js_option('Paths', {}) %>
+<% js_option('CurrentPath', "#{request.protocol}#{request.host_with_port}#{request.path}") %>
 <% js_option('GoogleMapsApiKey', Uke::Application::custom_config(:google_maps_api_key)) %>
 
 <!DOCTYPE html>

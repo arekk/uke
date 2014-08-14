@@ -3,7 +3,7 @@
   <% if @finder.location %>
     <div class="alert alert-info" role="alert">
       <h4>Informacja</h4>
-      <p>Wyszukiwanie w promieniu 25km względem lokalizacji <%= @finder.location.formatted_address %>, współrzędne: lat:<%= @finder.location.latitude %>, lon:<%= @finder.location.longitude %></p>
+      <p>Wyszukiwanie w promieniu <%= @finder.location_radius %>km względem lokalizacji <%= @finder.location.formatted_address %>, współrzędne: lat:<%= @finder.location.latitude %>, lon:<%= @finder.location.longitude %></p>
     </div>
   <% end %>
   <ul class="nav nav-tabs" role="tablist">
@@ -52,13 +52,13 @@
     <div class="container hidden-xs">
       <form>
         <div class="row">
-          <div class="col-md-5 col-md-offset-2">
-            <div class="form-group">
-              <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+          <div class="col-md-5 col-md-offset-3">
+            <div class="input-group">
+              <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">            
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary input-lg"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+              </span>
             </div>
-          </div>
-          <div class="col-md-2">      
-            <button type="submit" class="btn btn-primary input-lg"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
           </div>      
         </div>
       </form>
@@ -75,14 +75,18 @@
     </div>
   </div>
 
-  <div class="container hidden-xs">
-    <div class=" col-md-11">
+  <div class="row hidden-xs">
+    <div class=" col-md-12">
+      <%= bootstrap_info do %>
       <p class="text-muted"><small>
         Baza załadowana z wykazów udostępnionych <code><%= format_date @released_on, :only_date %></code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
         lokalizację lub właściciela pozwolenia. Możesz także:
-        wyszukiwać obiekty w promieniu od zadanej lokalizacji: użyj prefixu <code>loc:</code> przed nazwą miasta, eg.: <code><a href="/?q=loc: Bielsko-Biała">loc: Bielsko-Biała</a></code>;
-        wyszukiwać w zadanym przedziale częstotliwości: użyj prefixu <code>rng:</code> i podaj zakres częstotliwości, eg.: <code><a href="/?q=rng: 160.000 - 160.020">rng: 160.000 - 160.020</a></code>
+        wyszukiwać obiekty w promieniu od zadanej lokalizacji: użyj prefixu <code>loc:</code> przed nazwą lokalizacji: miasta, powiatu, eg.: <code><a href="/?q=loc: Bielsko-Biała">loc: Bielsko-Biała</a></code> lub 
+        <code><a href="/?q=loc: powiat bielski, Polska">loc: powiat bielski, Polska</a></code>;
+        wyszukiwać w zadanym przedziale częstotliwości: użyj prefixu <code>rng:</code> i podaj zakres częstotliwości, eg.: <code><a href="/?q=rng: 160.000 - 160.020">rng: 160.000 - 160.020</a></code>;
+        sprawdzić zmiany lub nowości dodane w najnowszym imporcie bazy UKE: użyj prefixu <code>news:</code> i podaj lokalizację tal samo jak dla prefixu <code>loc:</code>, eg.: <code><a href="/?q=news: śląskie, Polska">news: śląskie, Polska</a></code>.
       </small></p>
+      <% end %>
     </div>
   </div>
 

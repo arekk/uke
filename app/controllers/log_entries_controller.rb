@@ -5,7 +5,8 @@ class LogEntriesController < ApplicationController
 
   # GET /log_entries/new
   def new
-    @log_entry = LogEntry.my(current_user).new(mhz: Uke::Unifier::frq_string(params[:mhz]))
+    mhz = Uke::Unifier::frq_string(params[:mhz])
+    @log_entry = LogEntry.my(current_user).new(mhz: mhz > 0 ? mhz : nil)
   end
 
   # GET /log_entries/1/edit
@@ -41,16 +42,19 @@ class LogEntriesController < ApplicationController
 
   private
 
-    def set_mhz_search_result
-      mhz = params[:mhz] || params[:log_entry][:mhz]
+    def set_mhz_search_result      
+      mhz = params[:mhz] || (params[:log_entry] && params[:log_entry][:mhz])
+      if mhz
+        @bandplan = Bandplan.find_by_mhz mhz
 
-      @bandplan = Bandplan.find_by_mhz mhz
-
-      finder = Uke::Finder.new
-      finder.q = mhz
-      finder.location = OpenStruct.new({longitude: @log.lon, latitude: @log.lat})
-      @stations = finder.by_frq_order_by_distance
-      @stations = [] if @stations.nil?
+        finder = Uke::Finder.new
+        finder.q = mhz
+        finder.location = OpenStruct.new({longitude: @log.lon, latitude: @log.lat})
+        @stations = finder.by_frq_order_by_distance
+        @stations = [] if @stations.nil?
+      else
+        @stations = []
+      end
     end
 
     def set_log

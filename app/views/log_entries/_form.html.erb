@@ -1,3 +1,4 @@
+<% js_option('NewLogEntryPath', new_log_log_entry_path(@log)) %>
 <%= form_for [@log, @log_entry] do |f| %>
 <%= render 'layouts/form_errors', :errors => {:log_entry => @log_entry.errors} if @log_entry.errors.any? %>
 <div class="clearfix">
@@ -26,10 +27,20 @@
         </li>
       </ul>
       <ul class="list-group" id="log_entry_related_frequency_assignment_state">
-
+      
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">Inny</div>
+            <div class="col-md-4">Inna</div>
+            <div class="col-md-2"></div>
+            <div class="col-md-1"><%= f.radio_button :related_frequency_assignment_id, '', {'data-geocode-from-log' => true} %></div>
+          </div>
+        </li>
+      
 
       <% @stations.each do |station| %>
-        <li class="list-group-item radio-select-element" data-radio-select-state-element-selector="#log_entry_related_frequency_assignment_state" data-radio-select-element-selector="#log_entry_related_frequency_assignment_id_<%= station[:frequency_assignment_id] %>">
+        <li class="list-group-item">
           <div class="row">
             <div class="col-md-1"><%= station_net_to_icon station[:net], :h2 %></div>
             <div class="col-md-4"><%= station[:owner] %></div>
@@ -40,7 +51,6 @@
         </li>
       <% end %>
       </ul>
-
     <% else %>
       <%= bootstrap_info do %>
         Nie znalazłem w bazie danych żadnych częstotliwości powiązanych z <%= @log_entry.mhz %> MHz. Nie jest to oczywiście błędem, w bazie są nie znajdziesz częstotliwości
@@ -58,7 +68,12 @@
 
     <div class="form-group">
       <%= f.label :mhz, class: 'control-label' %>
-      <%= f.text_field :mhz, class: 'form-control input-lg', readonly: true %>
+      <div class="input-group">
+        <%= f.text_field :mhz, class: 'form-control input-lg' %>
+        <span class="input-group-btn">
+          <button type="button" id="log-entry-mhz-search-button" class="btn btn-primary input-lg"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+        </span>                      
+      </div>
     </div>
 
     <div class="form-group">
@@ -70,7 +85,7 @@
       <%= f.label :net, class: 'control-label' %>
       <div class="clearfix">
         <% Uke::Net::listenable.each do |net| %>
-            <div class="thumbnail h1-glyphicon-container pull-left radio-select-element" data-radio-select-state-element-selector="#log_entry_net_state" data-radio-select-element-selector="#log_entry_net_<%= net.downcase %>">
+            <div class="thumbnail h1-glyphicon-container pull-left">
               <%= station_net_to_icon net, :h1 %>
               <div class="caption">
                 <%= f.radio_button :net, net %>

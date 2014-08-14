@@ -1,5 +1,5 @@
 class Uke::Finder
-  attr_accessor :q, :results, :results_voice, :results_digital, :location, :active_import
+  attr_accessor :q, :results, :results_voice, :results_digital, :location, :location_radius, :active_import
 
   def initialize
     @results = @results_voice = @results_digital = []
@@ -16,7 +16,8 @@ class Uke::Finder
     @q = value.to_s
 
     @results = nil
-    @results = by_location
+    @results = by_news
+    @results = by_location  if @results.nil?
     @results = by_frq_range if @results.nil?
     @results = by_frq       if @results.nil?
     @results = by_string    if @results.nil?
@@ -28,20 +29,61 @@ class Uke::Finder
     self
   end
 
+  def by_news
+    return nil if @q.strip[0..4] != 'news:' || (@location = Geocoder.search(@q.gsub('news:', '').strip).first).nil?
+    
+    bounds_ne = @location.geometry['bounds']['northeast']
+    bounds_sw = @location.geometry['bounds']['southwest']
+    @location_radius = (distance_between_points([bounds_ne['lat'], bounds_ne['lng']], [bounds_sw['lat'], bounds_sw['lng']])/1000).round(0)
+    
+    sql = <<-SQL
+          SELECT DISTINCT us.id,
+                 (3959 * acos(cos(radians(:lat))*cos(radians(lat))*cos(radians(lon)-radians(:lon))+sin(radians(:lat))*sin(radians(lat)))) AS distance
+            FROM uke_import_news n
+      INNER JOIN uke_stations AS us ON (us.id = n.uke_station_id)
+           WHERE n.uke_import_id = :uke_import_id
+             AND lat BETWEEN :lat_sw AND :lat_ne
+             AND lon BETWEEN :lon_sw AND :lon_ne
+        ORDER BY distance ASC
+    SQL
+    
+    sql.gsub!(':uke_import_id', @active_import.id.to_s)
+    sql.gsub!(':lat_ne', conn.quote_string(bounds_ne['lat'].to_s))
+    sql.gsub!(':lat_sw', conn.quote_string(bounds_sw['lat'].to_s))
+    sql.gsub!(':lon_ne', conn.quote_string(bounds_ne['lng'].to_s))
+    sql.gsub!(':lon_sw', conn.quote_string(bounds_sw['lng'].to_s))
+    sql.gsub!(':lat', conn.quote_string(@location.latitude.to_s))
+    sql.gsub!(':lon', conn.quote_string(@location.longitude.to_s))
+    
+    result_to_hash select_using_uke_stations_result(sql)
+  end
+
   def by_location
     return nil if @q.strip[0..3] != 'loc:' || (@location = Geocoder.search(@q.gsub('loc:', '').strip).first).nil?
 
+    bounds_ne = @location.geometry['bounds']['northeast']
+    bounds_sw = @location.geometry['bounds']['southwest']
+    @location_radius = (distance_between_points([bounds_ne['lat'], bounds_ne['lng']], [bounds_sw['lat'], bounds_sw['lng']])/1000).round(0)
+    
     sql = <<-SQL
          SELECT DISTINCT us.id,
                 (3959 * acos(cos(radians(:lat))*cos(radians(lat))*cos(radians(lon)-radians(:lon))+sin(radians(:lat))*sin(radians(lat)))) AS distance
            FROM uke_stations AS us
           WHERE us.uke_import_id = :uke_import_id
-         HAVING distance < 10
+             AND lat BETWEEN :lat_sw AND :lat_ne
+             AND lon BETWEEN :lon_sw AND :lon_ne
        ORDER BY distance ASC
     SQL
-    sids = (conn.select_all sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s))).rows.map{|row|row[0]}.join(',')
 
-    result_to_hash select_using_uke_stations_sql(sids, "FIND_IN_SET(us.id, '#{sids}')")
+    sql.gsub!(':uke_import_id', @active_import.id.to_s)
+    sql.gsub!(':lat_ne', conn.quote_string(bounds_ne['lat'].to_s))
+    sql.gsub!(':lat_sw', conn.quote_string(bounds_sw['lat'].to_s))
+    sql.gsub!(':lon_ne', conn.quote_string(bounds_ne['lng'].to_s))
+    sql.gsub!(':lon_sw', conn.quote_string(bounds_sw['lng'].to_s))
+    sql.gsub!(':lat', conn.quote_string(@location.latitude.to_s))
+    sql.gsub!(':lon', conn.quote_string(@location.longitude.to_s))
+
+    result_to_hash select_using_uke_stations_result(sql)
   end
 
   def by_frq_range
@@ -50,7 +92,7 @@ class Uke::Finder
     sql = <<-SQL
          SELECT DISTINCT fa.subject_id
            FROM frequencies f
-      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
+     INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
           WHERE (f.mhz BETWEEN :mhz_start AND :mhz_end)
     SQL
 
@@ -63,7 +105,7 @@ class Uke::Finder
     sql = <<-SQL
          SELECT DISTINCT subject_id
            FROM frequencies f
-      INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
+     INNER JOIN frequency_assignments fa ON (fa.frequency_id = f.id AND fa.subject_type = 'UkeStation' AND fa.uke_import_id = :uke_import_id)
           WHERE f.mhz = :mhz
     SQL
 
@@ -101,7 +143,8 @@ class Uke::Finder
       INNER JOIN uke_stations us ON us.id = fa.subject_id
       INNER JOIN uke_operators uo ON uo.id = us.uke_operator_id
            WHERE f.mhz = :mhz
-          HAVING distance <= (2*us.radius)
+             AND fa.usage = 'TX'
+          HAVING distance <= 40
         ORDER BY distance ASC
     SQL
 
@@ -112,6 +155,14 @@ class Uke::Finder
 
   def conn
     ActiveRecord::Base.connection
+  end
+
+  def select_using_uke_stations_result(sql)
+    result = conn.select_all sql
+    return result unless result.rows.any?
+    
+    sids = result.rows.map{|row|row[0]}.join(',')
+    select_using_uke_stations_sql(sids, "FIND_IN_SET(us.id, '#{sids}')")
   end
 
   def select_using_uke_stations_sql(stations_sql, sort = 'uo.name_unified')
@@ -134,6 +185,7 @@ class Uke::Finder
            WHERE us.id IN (:stations_sql)
         GROUP BY us.id
         ORDER BY :sort
+           LIMIT 2500
     SQL
 
     conn.select_all sql.gsub(':stations_sql', stations_sql).gsub(':sort', sort)
@@ -142,5 +194,22 @@ class Uke::Finder
   def result_to_hash(result)
     columns = result.columns.map{|column| column.to_sym}
     result.rows.map { |row| Hash[columns.zip(row)] }
+  end
+  
+  def distance_between_points(a, b)
+    rad_per_deg = Math::PI/180  # PI / 180
+    rkm = 6371                  # Earth radius in kilometers
+    rm = rkm * 1000             # Radius in meters
+      
+    dlon_rad = (b[1]-a[1]) * rad_per_deg  # Delta, converted to rad
+    dlat_rad = (b[0]-a[0]) * rad_per_deg
+          
+    lat1_rad, lon1_rad = a.map! {|i| i * rad_per_deg }
+    lat2_rad, lon2_rad = b.map! {|i| i * rad_per_deg }
+            
+    a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2
+    c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1-a))
+                  
+    rm * c # Delta in meters
   end
 end

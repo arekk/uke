@@ -107,30 +107,34 @@ def insert_row(row, uke_import)
   station.uke_import = uke_import
   station.uke_permit = permit
   station.save!
-
+  
   row[:frq_rx].each do |mhz|
     frequency = Frequency.find_or_create_by!(mhz: mhz)
-    if (frequency_assignment = station.frequency_assignments.where(usage: 'RX', frequency: frequency).first).nil?
+    frequency_assignment = station.frequency_assignments.where(usage: 'RX', frequency: frequency).first
+    if frequency_assignment.nil?
       station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX', uke_import: uke_import)
       any_news = true
     else
       frequency_assignment.uke_import = uke_import
+      frequency_assignment.save!
     end
   end
-
+  
   row[:frq_tx].each do |mhz|
     frequency = Frequency.find_or_create_by!(mhz: mhz)
-    if (frequency_assignment = station.frequency_assignments.where(usage: 'TX', frequency: frequency).first).nil?
+    frequency_assignment = station.frequency_assignments.where(usage: 'TX', frequency: frequency).first
+    if frequency_assignment.nil?
       station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'TX', uke_import: uke_import)
       any_news = true
     else
       frequency_assignment.uke_import = uke_import
+      frequency_assignment.save!  
     end
   end
 
   if any_news && UkeImportNews.where(uke_import: uke_import, uke_station: station).first.nil?
     UkeImportNews.create(uke_import: uke_import, uke_station: station)
-    putsnb "News on station #{station.display_name}"
+    putsnb "News on station #{station.id}/#{station.display_name}"
   end
 end
 

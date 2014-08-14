@@ -22,7 +22,12 @@ class LogEntry < ActiveRecord::Base
     errors.add(:mhz, :out_of_range) if mhz < 25 || mhz > 520
     bandplan = Bandplan.find_by_mhz mhz
     errors.add(:mhz, :step_invalid) if bandplan && bandplan.step && (mhz*1000)%bandplan.step != 0
+    
+    self.log.log_entries.each do |log_entry|
+      errors.add(:mhz, :duplicate) if log_entry.frequency.mhz == mhz
+    end
   end
+  
   validates :description, allow_blank: true, length: {maximum: 255}
   validates :level, presence: true, inclusion: { in: 1..5 }
   validates :net, presence: true, inclusion: {in: Uke::Net::all}
