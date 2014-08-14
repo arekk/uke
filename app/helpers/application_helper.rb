@@ -97,9 +97,17 @@ module ApplicationHelper
     content_tag tag, '', class: station_net_to_glyphicon(station_or_net), title: station_net_to_display_name(station_or_net)
   end
 
+  def bootstrap_success(&block)
+    bootstrap_alert 'alert-success', &block
+  end
+
   def bootstrap_info(&block)
+    bootstrap_alert 'alert-info', &block
+  end
+
+  def bootstrap_alert(css_class, &block)
     content_tag :div, class: 'alert alert-info' do
-      content_tag(:h3) do
+      content_tag(:h4) do
         content_tag(:span, '', class: 'glyphicon glyphicon-info-sign') + ' informacja'
       end + content_tag(:p, capture( &block ))
     end

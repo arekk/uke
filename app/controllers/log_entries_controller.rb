@@ -5,8 +5,9 @@ class LogEntriesController < ApplicationController
 
   # GET /log_entries/new
   def new
-    mhz = Uke::Unifier::frq_string(params[:mhz])
-    @log_entry = LogEntry.my(current_user).new(mhz: mhz > 0 ? mhz : nil)
+    @log_entry = LogEntry.my(current_user).new
+    @log_entry.mhz = (mhz = Uke::Unifier::frq_string(params[:mhz])) > 0 ? mhz : nil
+    @log_entry.selected_panel = 'collapse-dont-know'
   end
 
   # GET /log_entries/1/edit
@@ -42,7 +43,7 @@ class LogEntriesController < ApplicationController
 
   private
 
-    def set_mhz_search_result      
+    def set_mhz_search_result
       mhz = params[:mhz] || (params[:log_entry] && params[:log_entry][:mhz])
       if mhz
         @bandplan = Bandplan.find_by_mhz mhz
@@ -67,6 +68,6 @@ class LogEntriesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def log_entry_params
-      params.require(:log_entry).permit(:description, :level, :mhz, :related_frequency_assignment_id, :net, :administrative_area_level_3, :administrative_area_level_2, :administrative_area_level_1, :country, :street_address, :lon, :lat)
+      params.require(:log_entry).permit(:description, :level, :selected_panel, :mhz, :related_frequency_assignment_id, :net, :administrative_area_level_3, :administrative_area_level_2, :administrative_area_level_1, :country, :street_address, :lon, :lat)
     end
 end
