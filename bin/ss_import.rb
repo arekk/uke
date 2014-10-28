@@ -159,18 +159,31 @@ putsnb "UKE import release #{@uke_import.id}/#{@uke_import.released_on.to_s}"
 Dir["#{Rails.root.to_s}/tmp/ss/#{@import_release_date}/*"].each do |xls_file|
   putsnb "File #{xls_file}\n"
 
-  book = Spreadsheet.open(xls_file, 'rb')
-  sheet = book.worksheet(0)
-  first = true
-  sheet.each do |row|
-    if first
-      first = false
-    else
+  book = Roo::Spreadsheet.open(xls_file)
+  book.default_sheet = book.sheets.first
+
+  num_of_rows = book.last_row
+  num_of_rows_processed = 0
+  last_percent_out = nil
+
+  putsnb "#{num_of_rows.to_s} rows to process, starting..."
+
+  0.upto(book.last_row) do |index|
+    if index > 1
+      row = book.row(index)
       begin
         insert_row(row2hash(row), @uke_import)
       rescue => e
         puts e.to_s
         puts row2hash(row).inspect
+      end
+
+      num_of_rows_processed += 1
+      percent_processed = ((num_of_rows_processed.to_f/num_of_rows.to_f)*100).round(0).to_i
+
+      if 0 == (percent_processed%10) && percent_processed != last_percent_out
+        putsnb "Processed #{percent_processed}% of #{xls_file}"
+        last_percent_out = percent_processed
       end
     end
   end

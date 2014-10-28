@@ -9,7 +9,8 @@ gem 'coffee-rails', '~> 4.0.0'
 
 gem 'mysql2', '0.3.15'
 gem 'nilify_blanks'
-gem 'spreadsheet', '~> 0.9.7'
+
+gem 'roo'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer',  platforms: :ruby

@@ -44,21 +44,22 @@ ActiveRecord::Schema.define(version: 20140813153407) do
     t.integer  "uke_import_id"
   end
 
-  add_index "frequency_assignments", ["frequency_id"], name: "index_frequency_assignments_on_frequency_id", using: :btree
+  add_index "frequency_assignments", ["frequency_id"], name: "index_assigned_frequencies_on_frequency_id", using: :btree
   add_index "frequency_assignments", ["subject_type", "subject_id", "usage"], name: "assigned_frequencies_on_subject_usage", using: :btree
-  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_frequency_assignments_on_subject_type_and_subject_id", using: :btree
+  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_assigned_frequencies_on_subject_type_and_subject_id", using: :btree
   add_index "frequency_assignments", ["uke_import_id"], name: "index_frequency_assignments_on_uke_import_id", using: :btree
 
   create_table "log_entries", force: true do |t|
     t.integer  "user_id"
     t.integer  "log_id"
-    t.integer  "frequency_assignment_id"
     t.text     "description"
     t.integer  "level"
+    t.string   "net",                             limit: 1
+    t.integer  "related_frequency_assignment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "lon",                         precision: 10, scale: 6
-    t.decimal  "lat",                         precision: 10, scale: 6
+    t.decimal  "lon",                                       precision: 10, scale: 6
+    t.decimal  "lat",                                       precision: 10, scale: 6
     t.string   "street_address"
     t.string   "administrative_area_level_3"
     t.string   "administrative_area_level_2"
@@ -66,8 +67,8 @@ ActiveRecord::Schema.define(version: 20140813153407) do
     t.string   "country"
   end
 
-  add_index "log_entries", ["frequency_assignment_id"], name: "index_log_entries_on_frequency_assignment_id", using: :btree
   add_index "log_entries", ["log_id"], name: "index_log_entries_on_log_id", using: :btree
+  add_index "log_entries", ["related_frequency_assignment_id"], name: "index_log_entries_on_related_frequency_assignment_id", using: :btree
   add_index "log_entries", ["user_id"], name: "index_log_entries_on_user_id", using: :btree
 
   create_table "logs", force: true do |t|
@@ -173,13 +174,13 @@ ActiveRecord::Schema.define(version: 20140813153407) do
     t.integer  "failed_attempts",         default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.string   "nickname"
     t.string   "location"
     t.string   "scanner_model"
     t.string   "trx_model"
     t.string   "radioscaner_forum_login"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "nickname"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
