@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   end
 
   devise_for :users
+  
+  get 'xml', to: 'frontpage#xml'
   root 'frontpage#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

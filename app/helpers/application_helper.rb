@@ -1,5 +1,22 @@
 # encoding: utf-8
+
 module ApplicationHelper
+  def to_ascii(txt)
+    pl_to_asci = {
+      'ą' => 'a', 'Ą' => 'A',
+      'ć' => 'c', 'Ć' => 'C',
+      'ę' => 'e', 'Ę' => 'E',
+      'ł' => 'l', 'Ł' => 'L',
+      'ń' => 'n', 'Ń' => 'N',
+      'ó' => 'o', 'Ó' => 'O',
+      'ś' => 's', 'Ś' => 'S',
+      'ź' => 'z', 'Ż' => 'Z',
+      'ż' => 'z', 'Ź' => 'Z'
+    }
+    pl_regexp = Regexp.new("([#{pl_to_asci.keys.join}])")
+    txt.gsub(pl_regexp, pl_to_asci)
+  end
+  
   def current_controller_class
     (params[:controller].gsub(/\//, '-') + '-' + controller.action_name) .downcase.gsub(/_/, '-')
   end

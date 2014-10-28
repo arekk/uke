@@ -40,7 +40,7 @@ class LogEntry < ActiveRecord::Base
   validates :lat, presence: true, inclusion: { in: -90..90 }, if: :has_location?
 
   after_validation do
-    frequency = Frequency.find_or_create_by!(mhz: mhz)
+    frequency = Frequency.find_or_create_by!(mhz: Uke::Unifier::frq_string(@mhz))
     self.frequency_assignment = FrequencyAssignment.new(frequency: frequency, usage: 'RX')
   end
 

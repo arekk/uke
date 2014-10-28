@@ -1,5 +1,5 @@
 class Uke::Finder
-  attr_accessor :q, :results, :results_voice, :results_digital, :location, :location_radius, :active_import
+  attr_accessor :q, :limit, :results, :results_voice, :results_digital, :location, :location_radius, :active_import
 
   def initialize
     @results = @results_voice = @results_digital = []
@@ -12,8 +12,9 @@ class Uke::Finder
     (@results.count > 0)
   end
 
-  def query(value)
+  def query(value, limit = 2500)
     @q = value.to_s
+    @limit = limit
 
     @results = nil
     @results = by_news
@@ -144,7 +145,7 @@ class Uke::Finder
       INNER JOIN uke_operators uo ON uo.id = us.uke_operator_id
            WHERE f.mhz = :mhz
              AND fa.usage = 'TX'
-          HAVING distance <= 40
+          HAVING distance <= 100
         ORDER BY distance ASC
     SQL
 
@@ -185,10 +186,10 @@ class Uke::Finder
            WHERE us.id IN (:stations_sql)
         GROUP BY us.id
         ORDER BY :sort
-           LIMIT 2500
+           LIMIT :limit
     SQL
 
-    conn.select_all sql.gsub(':stations_sql', stations_sql).gsub(':sort', sort)
+    conn.select_all sql.gsub(':stations_sql', stations_sql).gsub(':sort', sort).gsub(':limit', @limit.to_s)
   end
 
   def result_to_hash(result)
