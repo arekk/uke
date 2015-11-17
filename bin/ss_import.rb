@@ -31,30 +31,30 @@ def geo2dec(pos)
 end
 
 def row2hash(row)
-  #0 : Nr referencyjny
-  #1 : Ważna do
-  #2 : Nazwa stacji
-  #3 : Rodz stacji
-  #4 : Rodz sieci
-  #5 : Dł geo
-  #6 : Szer geo
-  #7 : R obsł
-  #8 : Lokalizacja stacji
-  #9 : ERP
-  #10: Azymut
-  #11: Elewacja
-  #12: Polar
-  #13: Zysk ant
-  #14: H anteny
-  #15: H terenu
-  #16: Ch-ka poz
-  #17: Ch-ka pion
-  #18: Częstotliwości nadawcze
-  #19: Częstotliwości odbiorcze
-  #20: Szer kanałów nad
-  #21: Szer kanałów odb
-  #22: Operator
-  #23: Adres operatora
+  #0 : A :Nr referencyjny
+  #1 : B: Ważna do
+  #2 : C: Nazwa stacji
+  #3 : D: Rodz stacji
+  #4 : E: Rodz sieci
+  #5 : F: Dł geo
+  #6 : G: Szer geo
+  #7 : H: R obsł
+  #8 : I: Lokalizacja stacji
+  #9 : J: ERP
+  #10: K: Azymut
+  #11: L: Elewacja
+  #12: M: Polar
+  #13: N: Zysk ant
+  #14: O: H anteny
+  #15: P: H terenu
+  #16: Q: Ch-ka poz
+  #17: R: Ch-ka pion
+  #18: S: Częstotliwości nadawcze
+  #19: T: Częstotliwości odbiorcze
+  #20: U: Szer kanałów nad
+  #21: V: Szer kanałów odb
+  #22: W: Operator
+  #23: X: Adres operatora
   h = {
     permit: {
       number:     row[0],
