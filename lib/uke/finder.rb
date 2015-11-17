@@ -49,12 +49,12 @@ class Uke::Finder
     SQL
     
     sql.gsub!(':uke_import_id', @active_import.id.to_s)
-    sql.gsub!(':lat_ne', conn.quote_string(bounds_ne['lat'].to_s))
-    sql.gsub!(':lat_sw', conn.quote_string(bounds_sw['lat'].to_s))
-    sql.gsub!(':lon_ne', conn.quote_string(bounds_ne['lng'].to_s))
-    sql.gsub!(':lon_sw', conn.quote_string(bounds_sw['lng'].to_s))
-    sql.gsub!(':lat', conn.quote_string(@location.latitude.to_s))
-    sql.gsub!(':lon', conn.quote_string(@location.longitude.to_s))
+    sql.gsub!(':lat_ne', conn.quote(bounds_ne['lat'].to_s))
+    sql.gsub!(':lat_sw', conn.quote(bounds_sw['lat'].to_s))
+    sql.gsub!(':lon_ne', conn.quote(bounds_ne['lng'].to_s))
+    sql.gsub!(':lon_sw', conn.quote(bounds_sw['lng'].to_s))
+    sql.gsub!(':lat', conn.quote(@location.latitude.to_s))
+    sql.gsub!(':lon', conn.quote(@location.longitude.to_s))
     
     result_to_hash select_using_uke_stations_result(sql)
   end
@@ -77,12 +77,12 @@ class Uke::Finder
     SQL
 
     sql.gsub!(':uke_import_id', @active_import.id.to_s)
-    sql.gsub!(':lat_ne', conn.quote_string(bounds_ne['lat'].to_s))
-    sql.gsub!(':lat_sw', conn.quote_string(bounds_sw['lat'].to_s))
-    sql.gsub!(':lon_ne', conn.quote_string(bounds_ne['lng'].to_s))
-    sql.gsub!(':lon_sw', conn.quote_string(bounds_sw['lng'].to_s))
-    sql.gsub!(':lat', conn.quote_string(@location.latitude.to_s))
-    sql.gsub!(':lon', conn.quote_string(@location.longitude.to_s))
+    sql.gsub!(':lat_ne', conn.quote(bounds_ne['lat'].to_s))
+    sql.gsub!(':lat_sw', conn.quote(bounds_sw['lat'].to_s))
+    sql.gsub!(':lon_ne', conn.quote(bounds_ne['lng'].to_s))
+    sql.gsub!(':lon_sw', conn.quote(bounds_sw['lng'].to_s))
+    sql.gsub!(':lat', conn.quote(@location.latitude.to_s))
+    sql.gsub!(':lon', conn.quote(@location.longitude.to_s))
 
     result_to_hash select_using_uke_stations_result(sql)
   end
@@ -97,7 +97,7 @@ class Uke::Finder
           WHERE (f.mhz BETWEEN :mhz_start AND :mhz_end)
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz_start', conn.quote_string(first.to_s)).gsub(':mhz_end', conn.quote_string(last.to_s)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz_start', conn.quote(first.to_s)).gsub(':mhz_end', conn.quote(last.to_s)))
   end
 
   def by_frq
@@ -110,7 +110,7 @@ class Uke::Finder
           WHERE f.mhz = :mhz
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':mhz', conn.quote(Uke::Unifier::frq_string(@q).to_s)))
   end
 
   def by_string
@@ -121,10 +121,10 @@ class Uke::Finder
           FROM uke_stations us
           JOIN uke_operators uo on (uo.id = us.uke_operator_id)
          WHERE us.uke_import_id = :uke_import_id
-           AND (us.location LIKE '%:like%' OR us.name LIKE '%:like%' OR uo.name LIKE '%:like%')
+           AND (us.location LIKE :like OR us.name LIKE :like OR uo.name LIKE :like)
     SQL
 
-    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':like', conn.quote_string(@q)))
+    result_to_hash select_using_uke_stations_sql(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':like', conn.quote('%'+@q.to_s+'%')))
   end
 
   def by_frq_order_by_distance
@@ -149,7 +149,7 @@ class Uke::Finder
         ORDER BY distance ASC
     SQL
 
-    result_to_hash(conn.select_all(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':lat', conn.quote_string(@location.latitude.to_s)).gsub(':lon', conn.quote_string(@location.longitude.to_s)).gsub(':mhz', conn.quote_string(Uke::Unifier::frq_string(@q).to_s))))
+    result_to_hash(conn.select_all(sql.gsub(':uke_import_id', @active_import.id.to_s).gsub(':lat', conn.quote(@location.latitude.to_s)).gsub(':lon', conn.quote(@location.longitude.to_s)).gsub(':mhz', conn.quote(Uke::Unifier::frq_string(@q).to_s))))
   end
 
   private
