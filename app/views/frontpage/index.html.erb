@@ -1,53 +1,93 @@
-<% if params.key?(:q) %>
-
-  <% unless @finder.location.nil? %>
+<% if @finder.any? %>
+  <% js_option 'MapMarkers', result_stations_to_g_markers(@finder.results) %>
+  <% if @finder.location %>
     <div class="alert alert-info" role="alert">
       <h4>Informacja</h4>
-      <p>Wyszukiwanie w promieniu 25km względem lokalizacji <%= @finder.location.formatted_address %>, współrzędne: lat:<%= @finder.location.latitude %>, lon:<%= @finder.location.longitude %></p>
+      <p>Wyszukiwanie w promieniu <%= @finder.location_radius %>km względem lokalizacji <%= @finder.location.formatted_address %>, współrzędne: lat:<%= @finder.location.latitude %>, lon:<%= @finder.location.longitude %></p>
     </div>
   <% end %>
-
-  <% if @finder.any? %>
-    <% js_option 'MapMarkers', result_stations_to_g_markers(@finder.results) %>
-
-    <ul class="nav nav-tabs" role="tablist">
-      <li class="active">
-        <a href="#table-voice" role="tab" data-toggle="tab">Głosowe <div class="label label-success"><%= @finder.results_voice.count %></div></a>
-      </li>
-      <li>
-        <a href="#table-digital" role="tab" data-toggle="tab">Cyfrowe <div class="label label-primary"><%= @finder.results_digital.count %></div></a>
-      </li>
-      <li>
-        <a href="#map" role="tab" data-toggle="tab">Mapa <div class="label label-danger"><%= @finder.results.count %></div></a>
-      </li>
-    </ul>
-
-    <div class="tab-content">
-      <div class="tab-pane active" id="table-voice">
-        <%= render 'list', stations: @finder.results_voice  %>
-      </div>
-      <div class="tab-pane" id="table-digital">
-        <%= render 'list', stations: @finder.results_digital %>
-      </div>
-      <div class="tab-pane" id="map">
-        <div id="map-canvas"></div>
-      </div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+      <a href="#table-voice" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Głosowe </span>
+        <h2 class="visible-xs glyphicon glyphicon-user"></h2>
+        <div class="label label-success"><%= @finder.results_voice.count %></div>
+      </a>
+    </li>
+    <li>
+      <a href="#table-digital" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Cyfrowe </span>
+        <h2 class="visible-xs glyphicon glyphicon-transfer"></h2>
+        <div class="label label-primary"><%= @finder.results_digital.count %></div>
+      </a>
+    </li>
+    <li>
+      <a href="#map" role="tab" data-toggle="tab">
+        <span class="hidden-xs">Mapa </span>
+        <h2 class="visible-xs glyphicon glyphicon-map-marker"></h2>
+        <div class="label label-danger"><%= @finder.results.count %></div>
+      </a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="table-voice">
+      <%= render 'list', stations: @finder.results_voice  %>
     </div>
-
-  <% else %>
+    <div class="tab-pane" id="table-digital">
+      <%= render 'list', stations: @finder.results_digital %>
+    </div>
+    <div class="tab-pane" id="map">
+      <div id="map-canvas"></div>
+    </div>
+  </div>
+<% else %>
+  <% if params.key?(:q) %>
     <div class="alert alert-success" role="alert">
       <h4>Informacja</h4>
       <p>Nie znaleziono niczego interesującego, spróbuj zmienić kryteria wyszukiwania.</p>
     </div>
   <% end %>
-<% else %>
-  <div class="jumbotron">
-      <div class="container">
-        <h1>Wyszukiwarka pozwoleń UKE</h1>
-        <p>Baza załadowana z wykazów udostępnionych <code>2014-07-10</code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
-        lokalizację lub właściciela pozwolenia.</p>
-        <p>Możesz także wyszukiwać obiekty w promieniu od zadanej lokalizacji, użyj prefixu <code>loc:</code> przed nazwą
-        miasta, eg.: <a href="/?q=loc%3A+bielsko-biała">Bielsko-Biała</a></p>
-      </div>
-   </div>
+  <div class="well well-lg">
+    <!-- to jest dla desktopów: przycisk obok okienka wyszukiwania -->
+    <div class="container hidden-xs">
+      <form>
+        <div class="row">
+          <div class="col-md-5 col-md-offset-3">
+            <div class="input-group">
+              <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">            
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary input-lg"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+              </span>
+            </div>
+          </div>      
+        </div>
+      </form>
+    </div>
+
+    <!-- to dla smartfonów: przycisk pod okienkiem wyszukiwania -->    
+    <div class="container visible-xs">
+      <form>
+        <div class="form-group">
+        <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control input-lg" name="q" value="<%= params[:q] %>">
+        </div>
+        <button type="submit" class="btn btn-primary input-lg col-xs-12"><span class="glyphicon glyphicon-search"></span> Szukaj</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="row hidden-xs">
+    <div class=" col-md-12">
+      <%= bootstrap_info do %>
+      <p class="text-muted"><small>
+        Baza załadowana z wykazów udostępnionych <code><%= format_date @released_on, :only_date %></code> i zawiera <code><%= @records_count %></code> rekordów. Użyj pola w górnej belce, aby wyszukać częstotliwość
+        lokalizację lub właściciela pozwolenia. Możesz także:
+        wyszukiwać obiekty w promieniu od zadanej lokalizacji: użyj prefixu <code>loc:</code> przed nazwą lokalizacji: miasta, powiatu, eg.: <code><a href="/?q=loc: Bielsko-Biała">loc: Bielsko-Biała</a></code> lub 
+        <code><a href="/?q=loc: powiat bielski, Polska">loc: powiat bielski, Polska</a></code>;
+        wyszukiwać w zadanym przedziale częstotliwości: użyj prefixu <code>rng:</code> i podaj zakres częstotliwości, eg.: <code><a href="/?q=rng: 160.000 - 160.020">rng: 160.000 - 160.020</a></code>;
+        sprawdzić zmiany lub nowości dodane w najnowszym imporcie bazy UKE: użyj prefixu <code>news:</code> i podaj lokalizację tal samo jak dla prefixu <code>loc:</code>, eg.: <code><a href="/?q=news: śląskie, Polska">news: śląskie, Polska</a></code>.
+      </small></p>
+      <% end %>
+    </div>
+  </div>
+
 <% end %>

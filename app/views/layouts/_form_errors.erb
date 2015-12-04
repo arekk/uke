@@ -1,0 +1,20 @@
+<div class="form-errors alert alert-danger">
+  <div class="form-errors-header">
+    <h3>
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      Znaleziono błędy w formularzu
+    </h3>
+    <p>Niektóre z pól formularza zawierają błędy.</p>
+  </div>
+  <div class="form-errors-body js-delay-hide">
+    <ul class="form-error-messages">
+      <% errors.each do |form, error| %>
+        <% error.messages.each do |field_name, field_error_messages| %>
+          <% field_error_messages.each do |error_message| %>
+            <li <% unless form.nil? %>data-errors-form="<%= form %>"<% end %> data-errors-field="<%= field_name %>"><%= error.full_message(field_name, error_message) %></li>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</div>

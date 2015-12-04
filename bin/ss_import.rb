@@ -1,4 +1,7 @@
-#!/usr/bin/env ruby.exe
+def putsnb(s)
+  puts Time.now.strftime("%H:%M:%S") + ': ' + s
+  $stdout.flush
+end
 
 def geo2dec(pos)
   # pozycję mamy w formacie: 18E47'13"
@@ -27,35 +30,31 @@ def geo2dec(pos)
   deg.to_f + (m.to_f * 1/60) + (s.to_f * 1/60 * 1/60)
 end
 
-def unify_string(string)
-  string.gsub(/[^0-9a-z]/i, '').gsub(/\s+/, '').downcase
-end
-
 def row2hash(row)
-  #0 : Nr referencyjny
-  #1 : Ważna do
-  #2 : Nazwa stacji
-  #3 : Rodz stacji
-  #4 : Rodz sieci
-  #5 : Dł geo
-  #6 : Szer geo
-  #7 : R obsł
-  #8 : Lokalizacja stacji
-  #9 : ERP
-  #10: Azymut
-  #11: Elewacja
-  #12: Polar
-  #13: Zysk ant
-  #14: H anteny
-  #15: H terenu
-  #16: Ch-ka poz
-  #17: Ch-ka pion
-  #18: Częstotliwości nadawcze
-  #19: Częstotliwości odbiorcze
-  #20: Szer kanałów nad
-  #21: Szer kanałów odb
-  #22: Operator
-  #23: Adres operatora
+  #0 : A :Nr referencyjny
+  #1 : B: Ważna do
+  #2 : C: Nazwa stacji
+  #3 : D: Rodz stacji
+  #4 : E: Rodz sieci
+  #5 : F: Dł geo
+  #6 : G: Szer geo
+  #7 : H: R obsł
+  #8 : I: Lokalizacja stacji
+  #9 : J: ERP
+  #10: K: Azymut
+  #11: L: Elewacja
+  #12: M: Polar
+  #13: N: Zysk ant
+  #14: O: H anteny
+  #15: P: H terenu
+  #16: Q: Ch-ka poz
+  #17: R: Ch-ka pion
+  #18: S: Częstotliwości nadawcze
+  #19: T: Częstotliwości odbiorcze
+  #20: U: Szer kanałów nad
+  #21: V: Szer kanałów odb
+  #22: W: Operator
+  #23: X: Adres operatora
   h = {
     permit: {
       number:     row[0],
@@ -75,6 +74,7 @@ def row2hash(row)
       ant_height:       row[14].to_i,
       ant_polarisation: row[12],
       directional:      (row[10].strip == '' ? false : true),
+      name_unified:     Uke::Unifier::indexify_string(row[2] + row[8])
     },
 
     frq_tx:     row[18].gsub(/\s+/, '').split(',').map{|frq| frq.to_f}.keep_if{|frq| frq > 0},
@@ -83,51 +83,119 @@ def row2hash(row)
     operator: {
       name:     row[22],
       address:  row[23],
-      name_unified: unify_string(row[22])
+      name_unified: Uke::Unifier::indexify_string(row[22])
     }
   }
 end
 
-def insert_row(row)
-  permit = Permit.find_by_number row[:permit][:number]
-  permit = Permit.create! row[:permit] if permit.nil?
+def insert_row(row, uke_import)
+  permit = UkePermit.find_by_number row[:permit][:number]
+  permit = UkePermit.create! row[:permit] if permit.nil?
 
-  operator = Operator.find_by_name_unified row[:operator][:name_unified]
-  operator = Operator.create! row[:operator] if operator.nil?
+  operator = UkeOperator.find_by_name_unified row[:operator][:name_unified]
+  operator = UkeOperator.create! row[:operator] if operator.nil?
 
-  station = Station.where(name: row[:station][:name], operator_id: operator.id).first
+  any_news = false
+  station = UkeStation.where(name_unified: row[:station][:name_unified], uke_operator: operator).first
+
   if station.nil?
-    station = Station.new row[:station]
-    station.operator = operator
-    station.permit = permit
-    station.save!
+    any_news = true
+    station = UkeStation.new row[:station]
+    station.uke_operator = operator
   end
 
+  station.uke_import = uke_import
+  station.uke_permit = permit
+  station.save!
+  
   row[:frq_rx].each do |mhz|
-    frequency = Frequency.find_or_create_by!(mhz: mhz, usage: 'RX')
-    station.frequencies << frequency if station.frequencies.where(mhz: frequency.mhz, usage: frequency.usage).first.nil?
+    frequency = Frequency.find_or_create_by!(mhz: mhz)
+    frequency_assignment = station.frequency_assignments.where(usage: 'RX', frequency: frequency).first
+    if frequency_assignment.nil?
+      station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'RX', uke_import: uke_import)
+      any_news = true
+    else
+      frequency_assignment.uke_import = uke_import
+      frequency_assignment.save!
+    end
+  end
+  
+  row[:frq_tx].each do |mhz|
+    frequency = Frequency.find_or_create_by!(mhz: mhz)
+    frequency_assignment = station.frequency_assignments.where(usage: 'TX', frequency: frequency).first
+    if frequency_assignment.nil?
+      station.frequency_assignments << FrequencyAssignment.new(frequency: frequency, usage: 'TX', uke_import: uke_import)
+      any_news = true
+    else
+      frequency_assignment.uke_import = uke_import
+      frequency_assignment.save!  
+    end
   end
 
-  row[:frq_tx].each do |mhz|
-    frequency = Frequency.find_or_create_by!(mhz: mhz, usage: 'TX')
-    station.frequencies << frequency if station.frequencies.where(mhz: frequency.mhz, usage: frequency.usage).first.nil?
+  if any_news && UkeImportNews.where(uke_import: uke_import, uke_station: station).first.nil?
+    UkeImportNews.create(uke_import: uke_import, uke_station: station)
+    putsnb "News on station #{station.id}/#{station.display_name}"
   end
 end
 
-Dir["#{Rails.root.to_s}/tmp/ss/*"].each do |xls_file|
-  book = Spreadsheet.open(xls_file, 'rb')
-  sheet = book.worksheet(0)
-  first = true
-  sheet.each do |row|
-    if first
-      first = false
-    else
+ARGV.each do|a|
+  putsnb "Argument: #{a}"
+  @import_release_date = a.sub(/--release-date=/, '').to_s unless (a =~ /--release-date=/).nil?
+end
+
+if @import_release_date.nil?
+  putsnb "Give UKE database release date as --release-date= argument"
+  exit
+end
+
+@uke_import = UkeImport.find_by_released_on(Date.parse(@import_release_date))
+if @uke_import.nil?
+  putsnb "Release not found, please create one using ss_import_create.rb"
+  exit
+end
+
+putsnb "UKE import release #{@uke_import.id}/#{@uke_import.released_on.to_s}"
+
+Dir["#{Rails.root.to_s}/tmp/ss/#{@import_release_date}/*"].each do |xls_file|
+  putsnb "File #{xls_file}\n"
+
+  book = Roo::Spreadsheet.open(xls_file)
+  book.default_sheet = book.sheets.first
+
+  num_of_rows = book.last_row
+  num_of_rows_processed = 0
+  last_percent_out = nil
+
+  putsnb "#{num_of_rows.to_s} rows to process, starting..."
+
+  0.upto(book.last_row) do |index|
+    if index > 1
+      row = book.row(index)
       begin
-        insert_row(row2hash row)
+        insert_row(row2hash(row), @uke_import)
       rescue => e
         puts e.to_s
         puts row2hash(row).inspect
       end
+
+      num_of_rows_processed += 1
+      percent_processed = ((num_of_rows_processed.to_f/num_of_rows.to_f)*100).round(0).to_i
+
+      if 0 == (percent_processed%10) && percent_processed != last_percent_out
+        putsnb "Processed #{percent_processed}% of #{xls_file}"
+        last_percent_out = percent_processed
+      end
     end
   end
 end
+
+UkeImport.all.each do |uke_import|
+  uke_import.active = false
+  uke_import.save!
+end
+
+uia = UkeImport.find(@uke_import.id)
+uia.active = true
+uia.save!
+
+putsnb "Done"

@@ -3,7 +3,8 @@
 <% js_option('Debug', Rails.env != 'production') %>
 <% js_option('GaGoal', flash[:ga_goal]) if flash[:ga_goal] %>
 <% js_option('Paths', {}) %>
-<% js_option('GoogleMapsApiKey', Rails.application.secrets.google_maps_api_key) %>
+<% js_option('CurrentPath', "#{request.protocol}#{request.host_with_port}#{request.path}") %>
+<% js_option('GoogleMapsApiKey', Uke::Application::custom_config(:google_maps_api_key)) %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,39 +13,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wyszukiwarka pozwoleń UKE</title>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">Wyszukiwarka pozwoleń UKE</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Częstotliwość lub lokalizacja" class="form-control" name="q" value="<%= params[:q] %>">
-            </div>
-            <button type="submit" class="btn btn-success">Szukaj</button>
-          </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
     <div class="container">
+      <div class="header">
+      
+        <!-- ta nawigacja nie jest widoczna na telefonach -->
+        <ul class="nav nav-pills pull-right hidden-xs">
+          <li><a href="/" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Szukaj</a></li>
+          <% if user_signed_in? %>
+          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-book')   + ' ' + t('controller.layout.log'), logs_path, class: 'btn btn-success' %></li>
+          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-user')   + ' ' + t('controller.layout.myaccount'), edit_user_registration_path, class: 'btn btn-default' %></li>
+          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.logout', name: current_user.nickname), destroy_user_session_path, class: 'btn btn-default' %></li>
+          <% else %>
+          <li ><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.login'), new_user_session_path, class: 'btn btn-default' %></li>
+          <% end %>
+        </ul>
+    
+        <!-- na telefonach używamy dużych przycisków z ikonami -->
+        <ul class="nav nav-pills pull-right visible-xs">
+          <li><a href="/" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span></a></li>
+          <% if user_signed_in? %>
+            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-book'), logs_path, class: 'btn btn-success btn-lg' %></li>
+            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-user'), edit_user_registration_path, class: 'btn btn-default btn-lg' %></li>
+            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-log-in'), destroy_user_session_path, class: 'btn btn-default btn-lg' %></li>
+          <% else %>
+            <li ><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-log-in'), new_user_session_path, class: 'btn btn-default btn-lg' %></li>
+          <% end %>
+        </ul>
+        
+        <h2 class="text-muted">
+          <%= image_tag '1407546046_marine_radio.png' %>
+        </h2>        
+      </div>      
+      
+      <% if notice %><div class="alert alert-info"><p><%= notice %></p></div><% end %>
+      <% if alert  %><div class="alert alert-danger"><p><%= alert %></p></div><% end %>
       <%= yield %>
-      <hr>
+      <hr class="hidden-xs">
       <footer>
         <p class="text-muted"><small>Arkadiusz Kuryłowicz 2014<br />
         Może zainteresuje Cię także <a href="http://serwisant-online.pl/" title="Darmowa aplikacja do prowadzenia napraw serwisowych">darmowa aplikacja do prowadzenia napraw serwisowych</a>?</small></p>
       </footer>
     </div>
+
+    <div class="modal fade" id="modal-popup-1" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title modal-header-title"></h4>
+          </div>
+          <div class="modal-body" id="modal-popup-1-body">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+            <button type="button" class="modal-popup-btn-ok">Dalej</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script type="text/javascript">var application_js_options = <%= raw @js_options.to_json %>;</script>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   </body>

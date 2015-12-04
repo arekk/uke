@@ -22,9 +22,16 @@ rake db:migrate
 rake assets:precompile
 mkdir tmp/ss
 ```
-
-Arkusze z wykazem pozwoleń należy pobrać ze stron UKE: http://www.uke.gov.pl/pozwolenia-radiowe-dla-klasycznych-sieci-radiokomunikacji-ruchomej-ladowej-5458 i zapisać w katalogu tmp/ss a następnie uruchomić skrypt importu:
+Arkusze z wykazem pozwoleń znajdują się na stronach UKE: http://www.uke.gov.pl/pozwolenia-radiowe-dla-klasycznych-sieci-radiokomunikacji-ruchomej-ladowej-5458
+Należy zacząć od utworzenia importu odpowiadającego dacie publikacji pozwoleń, dla przykładu arkusze opublikowane zostały 2014-10-10:
 
 ```
-rails r bin/ss_import.rb
+rails r bin/ss_import_create.rb --release-date=2014-10-10
+```
+
+Następnie w katalogu tmp/ss/2014-10-10 zapisać wszystkie arkusze (lub wybrane)
+W następnej kolejności uruchomić skrypt importu:
+
+```
+rails r bin/ss_import.rb --release-date=2014-10-10
 ```

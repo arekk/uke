@@ -4,9 +4,20 @@
  *= require_tree .
  */
 
+/* Space out content a bit */
 body {
-  padding-top: 80px;
+  padding-top: 20px;
   padding-bottom: 20px;
+}
+
+/* Custom page header */
+.header {
+  margin-bottom: 10px;
+}
+
+.h1-glyphicon-container {
+  width: 46px;
+  margin-right: 10px;
 }
 
 .tab-content {

@@ -1,4 +1,4 @@
-<ul class="list-group visible-desktop">
+<ul class="list-group hidden-xs">
   <li class="list-group-item list-group-item-default">
     <div class="row">
       <div class="col-md-3"><h4 class="list-group-item-heading">Operator</h4></div>
@@ -10,16 +10,17 @@
     </div>
   </li>
 </ul>
+
 <ul class="list-group">
   <% stations.each do |station| %>
     <li class="list-group-item">
       <div class="row">
-        <div class="col-md-3"><%= link_to station.operator_name, root_path(q: station.operator_name) %></div>
-        <div class="col-md-2"><%= station.name %> </div>
-        <div class="col-md-2"><%= station.location %></div>
-        <div class="col-md-1"><%= station_net_to_icon(station) %></div>
-        <div class="col-md-2"><%= format_frequency station.tx_frequencies %></div>
-        <div class="col-md-2"><%= format_frequency station.rx_frequencies %></div>
+        <div class="col-md-3"><%= link_to station[:owner], root_path(q: station[:owner]) %></div>
+        <div class="col-md-2"><%= station[:name] %> </div>
+        <div class="col-md-2"><%= station[:location] %></div>
+        <div class="col-md-1"><%= station_net_to_icon(station[:net]) %></div>
+        <div class="col-md-2"><%= format_frequencies station[:tx_frequencies] %></div>
+        <div class="col-md-2"><%= format_frequencies station[:rx_frequencies] %></div>
       </div>
     </li>
   <% end %>

@@ -25,4 +25,7 @@ config/secrets.yml
 
 .idea
 config/database.yml
+config/application.yml
 public/assets
+
+google*.html

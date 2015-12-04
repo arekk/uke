@@ -1,0 +1,21 @@
+<ul class="nav nav-pills nav-stacked">
+  <% @logs.each do |log| %>
+    <% if @log && @log.id == log.id %>
+      <li class="active">
+        <a href="<%= url_for log %>">
+        <%= log.name %> <span class="badge"><%= log.log_entries.count %></span><br />
+        <small><%= log.display_location %></small>
+        </a>
+      </li>
+    <% else %>
+      <li>
+        <a href="<%= url_for log %>">
+        <%= log.name %> <span class="badge"><%= log.log_entries.count %></span><br />
+        </a>
+      </li>
+    <% end %>
+  <% end %>
+  <li class="active">
+    <%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-book') + ' ' + 'Nowy dziennik', new_log_path %>
+  </li>
+</ul>

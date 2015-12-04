@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
-  root 'frontpage#index'
+  resources :logs do
+    resources :log_entries, only: [:new, :create, :destroy]
+  end
+
+  devise_for :users
   
+  get 'xml', to: 'frontpage#xml'
+  root 'frontpage#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

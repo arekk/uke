@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ArrayOfMemoryEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<% @finder.results.each do |station| %>
+<% station[:tx_frequencies].to_s.split(',').each do |frq| %>
+  <MemoryEntry>
+    <IsFavourite>false</IsFavourite>
+    <Name><%= to_ascii(station[:owner]).gsub('"', '') %>: <%= to_ascii(station[:name]).gsub('"', '') %></Name>
+    <GroupName><%= to_ascii(params[:q]) %></GroupName>
+    <Frequency><%= (frq.to_f * 1000000).to_i %></Frequency>
+    <DetectorType>NFM</DetectorType>
+    <Shift>0</Shift>
+    <FilterBandwidth>5000</FilterBandwidth>
+  </MemoryEntry>
+<% end %>
+<% end %>
+</ArrayOfMemoryEntry>
