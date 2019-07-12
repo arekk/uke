@@ -24,7 +24,7 @@ mkdir tmp/ss
 ```
 Arkusze z wykazem pozwoleń znajdują się na stronach UKE: 
 
-https://bip.uke.gov.pl/pozwolenia/pozwolenia-radiowe-dla-klasycznych-sieci-radiokomunikacji-ruchomej-ladowej,4.html
+https://dane.gov.pl/dataset/1070
 
 Należy zacząć od utworzenia importu odpowiadającego dacie publikacji pozwoleń, dla przykładu arkusze opublikowane zostały 2014-10-10:
 
