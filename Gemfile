@@ -35,7 +35,7 @@ gem 'roo'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
-gem 'geocoder'
+gem 'geocoder', '~> 1.5', '>= 1.5.1'
 
 group :development do
   gem 'bootstrap-generators', '~> 3.1.0'
@@ -44,6 +44,3 @@ group :development do
   gem 'guard-rails', '~> 0.5.0'
   gem 'better_errors', '~> 1.1.0'
 end
-
-gem 'devise'
-

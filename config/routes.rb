@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  resources :logs do
-    resources :log_entries, only: [:new, :create, :destroy]
-  end
-
-  devise_for :users
-  
   get 'xml', to: 'frontpage#xml'
   root 'frontpage#index'
 
