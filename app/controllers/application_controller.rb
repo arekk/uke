@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_locale
-    unless (locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first).nil?
+    if request.env['HTTP_ACCEPT_LANGUAGE'] && !(locale = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first).nil?
       begin
         I18n.locale = locale
       rescue I18n::InvalidLocale
