@@ -23,25 +23,11 @@
         <!-- ta nawigacja nie jest widoczna na telefonach -->
         <ul class="nav nav-pills pull-right hidden-xs">
           <li><a href="/" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Szukaj</a></li>
-          <% if user_signed_in? %>
-          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-book')   + ' ' + t('controller.layout.log'), logs_path, class: 'btn btn-success' %></li>
-          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-user')   + ' ' + t('controller.layout.myaccount'), edit_user_registration_path, class: 'btn btn-default' %></li>
-          <li><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.logout', name: current_user.nickname), destroy_user_session_path, class: 'btn btn-default' %></li>
-          <% else %>
-          <li ><%= link_to content_tag(:i, '', :class => 'glyphicon glyphicon-log-in') + ' ' + t('controller.layout.login'), new_user_session_path, class: 'btn btn-default' %></li>
-          <% end %>
         </ul>
     
         <!-- na telefonach używamy dużych przycisków z ikonami -->
         <ul class="nav nav-pills pull-right visible-xs">
           <li><a href="/" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-search"></span></a></li>
-          <% if user_signed_in? %>
-            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-book'), logs_path, class: 'btn btn-success btn-lg' %></li>
-            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-user'), edit_user_registration_path, class: 'btn btn-default btn-lg' %></li>
-            <li><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-log-in'), destroy_user_session_path, class: 'btn btn-default btn-lg' %></li>
-          <% else %>
-            <li ><%= link_to content_tag(:span, '', :class => 'glyphicon glyphicon-log-in'), new_user_session_path, class: 'btn btn-default btn-lg' %></li>
-          <% end %>
         </ul>
         
         <h2 class="text-muted">

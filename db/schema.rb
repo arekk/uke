@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813153407) do
+ActiveRecord::Schema.define(version: 20190713071420) do
 
   create_table "bandplans", force: true do |t|
     t.decimal  "mhz_start",   precision: 10, scale: 4, null: false
@@ -44,50 +44,10 @@ ActiveRecord::Schema.define(version: 20140813153407) do
     t.integer  "uke_import_id"
   end
 
-  add_index "frequency_assignments", ["frequency_id"], name: "index_assigned_frequencies_on_frequency_id", using: :btree
+  add_index "frequency_assignments", ["frequency_id"], name: "index_frequency_assignments_on_frequency_id", using: :btree
   add_index "frequency_assignments", ["subject_type", "subject_id", "usage"], name: "assigned_frequencies_on_subject_usage", using: :btree
-  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_assigned_frequencies_on_subject_type_and_subject_id", using: :btree
+  add_index "frequency_assignments", ["subject_type", "subject_id"], name: "index_frequency_assignments_on_subject_type_and_subject_id", using: :btree
   add_index "frequency_assignments", ["uke_import_id"], name: "index_frequency_assignments_on_uke_import_id", using: :btree
-
-  create_table "log_entries", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "log_id"
-    t.text     "description"
-    t.integer  "level"
-    t.string   "net",                             limit: 1
-    t.integer  "related_frequency_assignment_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.decimal  "lon",                                       precision: 10, scale: 6
-    t.decimal  "lat",                                       precision: 10, scale: 6
-    t.string   "street_address"
-    t.string   "administrative_area_level_3"
-    t.string   "administrative_area_level_2"
-    t.string   "administrative_area_level_1"
-    t.string   "country"
-  end
-
-  add_index "log_entries", ["log_id"], name: "index_log_entries_on_log_id", using: :btree
-  add_index "log_entries", ["related_frequency_assignment_id"], name: "index_log_entries_on_related_frequency_assignment_id", using: :btree
-  add_index "log_entries", ["user_id"], name: "index_log_entries_on_user_id", using: :btree
-
-  create_table "logs", force: true do |t|
-    t.string   "name"
-    t.text     "remarks"
-    t.integer  "user_id"
-    t.integer  "location_precision",                                   default: 0
-    t.decimal  "lon",                         precision: 10, scale: 6
-    t.decimal  "lat",                         precision: 10, scale: 6
-    t.string   "street_address"
-    t.string   "administrative_area_level_3"
-    t.string   "administrative_area_level_2"
-    t.string   "administrative_area_level_1"
-    t.string   "country"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "logs", ["user_id"], name: "index_logs_on_user_id", using: :btree
 
   create_table "uke_import_news", force: true do |t|
     t.integer  "uke_import_id"
@@ -155,37 +115,5 @@ ActiveRecord::Schema.define(version: 20140813153407) do
   add_index "uke_stations", ["uke_import_id"], name: "index_uke_stations_on_uke_import_id", using: :btree
   add_index "uke_stations", ["uke_operator_id"], name: "index_uke_stations_on_uke_operator_id", using: :btree
   add_index "uke_stations", ["uke_permit_id"], name: "index_uke_stations_on_uke_permit_id", using: :btree
-
-  create_table "users", force: true do |t|
-    t.string   "email",                   default: "", null: false
-    t.string   "encrypted_password",      default: "", null: false
-    t.string   "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",           default: 0,  null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",         default: 0,  null: false
-    t.string   "unlock_token"
-    t.datetime "locked_at"
-    t.string   "location"
-    t.string   "scanner_model"
-    t.string   "trx_model"
-    t.string   "radioscaner_forum_login"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "nickname"
-  end
-
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
 end
