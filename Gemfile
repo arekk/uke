@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '4.1.4'
-gem 'rake', '10.1.1'
+gem 'rake', '12.3.3'
 
 gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
